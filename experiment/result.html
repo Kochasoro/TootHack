@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Analysis Results - TootHack</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #222;
+      background: #fff;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    nav a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: black;
+      font-size: 14px;
+    }
+    nav a:hover {
+      color: #4faeff;
+      text-decoration: underline;
+    }
+
+    nav a.active {
+      color: #4faeff;
+    }
+
+    /* Page Title */
+    section {
+      padding: 30px 40px 10px 40px;
+    }
+    section h2 {
+      font-size: 28px;
+      margin: 0 0 10px 0;
+    }
+    section p {
+      color: #666;
+      margin: 0;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      padding: 0 40px;
+      margin: 20px 0;
+    }
+    .tabs button {
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1px solid #007BFF;
+      background: white;
+      color: #007BFF;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .tabs button.active {
+      background: #007BFF;
+      color: white;
+    }
+
+    /* Layout */
+    main {
+      display: none; 
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 0 40px 40px 40px;
+    }
+    main.active {
+      display: grid;
+    }
+
+    .card {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 12px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+      margin: 0 0 8px 0;
+    }
+    .card p {
+      margin: 0;
+      color: #555;
+    }
+    .badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #007BFF;
+      color: white;
+      font-weight: bold;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 13px;
+    }
+
+    /* Image block */
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .card button {
+      margin-top: 15px;
+      padding: 8px 15px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    .card button:hover {
+      background: #0056b3;
+    }
+
+    /* Footer button */
+    .footer-btn {
+      padding: 40px;
+    }
+    .footer-btn button {
+      padding: 12px 25px;
+      border: none;
+      background: #007BFF;
+      color: white;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .footer-btn button:hover {
+      background: #0056b3;
+    }
+
+    /* Responsive */
+    @media(max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>TootHack</h1>
+    <nav>
+      <a href="{{ url_for('main.home') }}">Home</a>
+      <a href="{{ url_for('main.howitworks') }}">How it Works</a>
+      <a href="{{ url_for('main.upload') }}">Upload X-Ray</a>
+      <a href="{{ url_for('main.result') }}" class="active">Results</a>
+    </nav>
+  </header>
+
+  <!-- Page Title -->
+  <section>
+    <h2>AI Analysis Results</h2>
+    <p>Below is a summary of the detected issues from your AI analysis</p>
+  </section>
+  <h2>Upload Dental X-ray</h2>
+  <input type="file" id="fileInput">
+  <h3>Result:</h3>
+  
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="active" data-tab="overview">Overview</button>
+    <button data-tab="recommendation">Recommendation</button>
+  </div>
+
+  <!-- Main Content: Overview -->
+  <main id="overview" class="active">
+    <!-- Left Cards -->
+    <div>
+      <div class="card">
+        <h3>Cavity Detected</h3>
+        <p>A darkened area is visible on the second upper molar, suggesting dental caries.</p>
+        <span class="badge">13</span>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h3>Minor Decay</h3>
+        <p>A small cavity detected in the lower molar that may need attention soon.</p>
+        <span class="badge">1</span>
+      </div>
+    </div>
+
+    <!-- Right Image -->
+    <div class="card">
+      <h3>Visual Feedback</h3>
+      <img id="resultImg" style="max-width:600px; border:1px solid #ccc;">
+      <pre id="jsonOutput"></pre>
+      <button id="retakeBtn">⟳ Retake Upload</button>
+    </div>
+  </main>
+
+  <!-- Main Content: Recommendation -->
+  <main id="recommendation">
+    <div class="card">
+      <h3>Recommendations:</h3>
+      <ul>
+        <li>Dental filling is recommended to prevent further decay.</li>
+        <li>Maintain improved oral hygiene practices and schedule regular dental visits.</li>
+      </ul>
+      <img src="{{ url_for('static', filename='images/map.jpg') }}" alt="Map" style="width:100%; border-radius:10px; margin-top:10px;">
+    </div>
+  </div>
+  </main>
+
+  <!-- Footer Button -->
+  <div class="footer-btn">
+    <button>⬇ Download Report</button>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll(".tabs button");
+    const sections = document.querySelectorAll("main");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+       
+        tabs.forEach(t => t.classList.remove("active"));
+        sections.forEach(s => s.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+    });
+
+    document.getElementById("retakeBtn").addEventListener("click", function() {
+    window.location.href = "{{ url_for('main.upload') }}";
+    });
+    document.getElementById("retakeBtn2").addEventListener("click", function() {
+    window.location.href = "{{ url_for('main.upload') }}";
+    });
+  </script>
+
+   <script>
+  document.getElementById("fileInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await fetch("/predict", {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await response.json();
+
+    // Show annotated image
+    document.getElementById("resultImg").src = "data:image/jpeg;base64," + result.annotated_image;
+
+    // Show JSON detections
+    document.getElementById("jsonOutput").textContent = JSON.stringify(result.detections, null, 2);
+  });
+  </script>
+</body>
+</html>

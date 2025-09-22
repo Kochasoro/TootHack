@@ -139,7 +139,7 @@
   <button class="burger" onclick="toggleSidebar()">☰</button>
   <a href="{{ url_for('main.home') }}" title="Home"><i class="fas fa-home"></i></a>
   <a href="{{ url_for('main.howitworks') }}" title="How it Works"><i class="fas fa-info-circle"></i></a>
-  <a href="{{ url_for('main.upload') }}" title="Upload X-Ray"><i class="fas fa-upload"></i></a>
+  <a href="{{ url_for('main.result') }}" title="Upload X-Ray"><i class="fas fa-upload"></i></a>
 </div>
 
 <!-- Sidebar -->
@@ -151,7 +151,7 @@
   <a href="{{ url_for('main.howitworks') }}" class="{% if active_page == 'howitworks' %}active{% endif %}">
     <i class="fas fa-info-circle"></i> How it Works
   </a>
-  <a href="{{ url_for('main.upload') }}" class="{% if active_page == 'upload' %}active{% endif %}">
+  <a href="{{ url_for('main.result') }}" class="{% if active_page == 'upload' %}active{% endif %}">
     <i class="fas fa-upload"></i> Upload X-Ray
   </a>
 </div>

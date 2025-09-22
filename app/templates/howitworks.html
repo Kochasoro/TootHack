@@ -53,23 +53,38 @@
 
 
     /* Header */
-   header {
-    display: flex;
-    align-items: center;
-    padding: 15px 30px 15px 70px; /* space for burger */
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: transparent;
+      color: white;
+    }
 
-  header h1 {
-    margin: 0;
-    font-size: 22px;
-    line-height: 26px;
-  }
+    header h1 {
+      font-size: 22px; 
+      color: white;
+    }
 
+    nav a {
+      text-decoration: none; 
+      margin: 0 12px; 
+      color: white; 
+      font-size: 14px;
+      transition: color .3s;
+    }
+
+    nav a:hover {
+      color: #4faeff;
+    }
+
+    nav a.active {
+      color: #4faeff;
+    }
 
     /* Background Section */
     .bg-section {
@@ -149,7 +164,6 @@
     }
 
     .tab-content {
-      padding-left: 70px;
       font-size: 18px;
       line-height: 1.8;
     }
@@ -362,12 +376,11 @@
 
   <!-- HEADER -->
   <header>
-   <div class="header-left">
     <h1>TootHack</h1>
   </div>
   {% include 'sidebar.html' %}
   </header>
-
+ <div class="header-left">
   <!-- BACKGROUND IMAGE SECTION -->
   <section class="bg-section">
     <div class="page-content">

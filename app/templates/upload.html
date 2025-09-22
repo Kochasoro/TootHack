@@ -1,137 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TootHack - Upload X-Ray</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-   header {
-    display: flex;
-    align-items: center;
-    padding: 15px 30px 15px 70px; /* space for burger */
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-
-  header h1 {
-    margin: 0;
-    font-size: 22px;
-    line-height: 26px;
-  }
-
-
-    .reminder {
-      margin-top: 20px;
-    }
-
-    .reminder h2 {
-      font-size: 30px;
-      font-weight: bold;
-    }
-
-    .reminder p {
-      font-size: 19px;
-      margin: 5px 0;
-    }
-
-    .upload-box {
-      margin: 30px auto;
-      width: 60%;
-      height: 450px;
-      border: 4px dashed #888;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      border-radius: 10px;
-      color: #555;
-    }
-
-    .upload-box img {
-      width: 60px;
-      opacity: 0.7;
-    }
-
-    .upload-box p {
-      margin: 10px 0 5px 0;
-    }
-
-    .upload-box small {
-      font-size: 12px;
-      color: #777;
-    }
-
-    .upload-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      border: none;
-      color: white;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .upload-btn:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <title>Cavity Detection</title>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-    <h1>TootHack</h1>
-  </div>
-  {% include 'sidebar.html' %}
-  </header>
+  <h2>Upload Dental X-ray</h2>
+  <input type="file" id="fileInput">
+  <h3>Result:</h3>
+  <img id="resultImg" style="max-width:600px; border:1px solid #ccc;">
+  <pre id="jsonOutput"></pre>
 
-  <section class="reminder">
-    <h2>Important Reminders:</h2>
-    <p><strong>This tool provides AI-generated preliminary feedback.</strong></p>
-    <p>It’s not a replacement for a licensed dentist. Always follow up with a professional for a full check-up!</p>
-  </section>
 
-  <div class="upload-box" id="drop-area">
-    <img src="https://cdn-icons-png.flaticon.com/512/685/685655.png" alt="upload icon">
-    <p>Drop, Upload or Paste Images</p>
-    <small>Supported formats: JPG, PNG, GIF, JFIF (JPEG)</small>
-    <input type="file" id="fileElem" accept="image/*" style="display:none">
-  </div>
 
-  <button class="upload-btn" onclick="document.getElementById('fileElem').click();">
-    ⬆ Upload
-  </button>
 
+
+
+
+
+
+
+
+  
   <script>
-    let dropArea = document.getElementById('drop-area');
+  document.getElementById("fileInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
 
-    dropArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropArea.style.borderColor = '#007bff';
+    const response = await fetch("/predict", {
+      method: "POST",
+      body: formData
     });
 
-    dropArea.addEventListener('dragleave', () => {
-      dropArea.style.borderColor = '#888';
-    });
+    const result = await response.json();
 
-    dropArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropArea.style.borderColor = '#888';
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        alert(`File uploaded: ${files[0].name}`);
-      }
-    });
+    // Show annotated image
+    document.getElementById("resultImg").src = "data:image/jpeg;base64," + result.annotated_image;
+
+    // Show JSON detections
+    document.getElementById("jsonOutput").textContent = JSON.stringify(result.detections, null, 2);
+  });
   </script>
 </body>
 </html>

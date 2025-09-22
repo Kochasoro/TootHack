@@ -12,8 +12,8 @@
       padding: 0;
       text-align: center;
       overflow-y: scroll;
-      
     }
+<<<<<<< HEAD
   h1, h2, h3, .navbar-brand {
     font-family: 'Poppins', sans-serif; 
   }
@@ -27,12 +27,37 @@
     top: 0;
     z-index: 1000;
   }
+=======
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    nav a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: black;
+      font-size: 14px;
+    }
+    nav a:hover {
+      color: #4faeff;
+      text-decoration: underline;
+    }
+>>>>>>> 39df53af467f98341285d2469ad6bef9f5ef17c9
 
-  header h1 {
-    margin: 0;
-    font-size: 22px;
-    line-height: 26px;
-  }
+    nav a.active {
+      color: #4faeff;
+    }
 
     .home img {
       width: 100%;
@@ -116,7 +141,7 @@
     
     #faqs {
       text-align: left;
-      padding: 70px;
+      padding: 40px;
     }
     #faqs h2 {
       font-size: 20px;
@@ -153,13 +178,12 @@
   </style>
 </head>
 <body>
-  <header>
+   <header>
   <div class="header-left">
     <h1>TootHack</h1>
   </div>
   {% include 'sidebar.html' %}
 </header>
-
 
   <section class="home" id="home">
     <img src="{{ url_for('static', filename='images/bg.jpg') }}" 
@@ -216,6 +240,7 @@
     </ul>
   </section>
 
+<<<<<<< HEAD
   <script>
   // Add "loaded" class when image finishes loading
   document.addEventListener("DOMContentLoaded", () => {
@@ -227,5 +252,7 @@
   });
 </script>
 
+=======
+>>>>>>> 39df53af467f98341285d2469ad6bef9f5ef17c9
 </body>
 </html>
