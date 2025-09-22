@@ -266,7 +266,47 @@
         .focus-btn:hover {
             background-color: #2980b9;
         }
-        
+        .detection-counter {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.detection-counter h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.counter-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.counter-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.counter-class {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.counter-count {
+    background-color: #3498db;
+    color: white;
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
         /* Responsive */
         @media (max-width: 768px) {
             main {
@@ -354,12 +394,21 @@
         </div>
 
         <!-- Right Image -->
-        <div class="card">
+              <div class="card">
             <h3>Visual Feedback</h3>
             <div id="resultContainer">
                 <img id="resultImg" style="max-width:100%; border:1px solid #ccc; display: none;">
                 <!-- Canvas will be inserted here dynamically -->
             </div>
+            
+            <!-- Detection Counter -->
+            <div id="detectionCounter" class="detection-counter" style="display: none;">
+                <h4>Detection Summary</h4>
+                <div id="counterItems">
+                    <!-- Counter items will be inserted here -->
+                </div>
+            </div>
+            
             <pre id="jsonOutput"></pre>
         </div>
     </main>
@@ -381,429 +430,462 @@
     </div>
 
     <script>
-        const tabs = document.querySelectorAll(".tabs button");
-        const sections = document.querySelectorAll("main");
-        let currentDetections = [];
-        let currentImageData = null;
-        let currentDetectionData = [];
-        let originalImageData = null;
-        let activeFilter = null;
+    const tabs = document.querySelectorAll(".tabs button");
+    const sections = document.querySelectorAll("main");
+    let currentDetections = [];
+    let currentImageData = null;
+    let currentDetectionData = [];
+    let originalImageData = null;
+    let activeFilter = null;
+    
+    let originalImage = null;
+    let canvas = null;
+    let ctx = null;
+    let detectionOverlays = [];
+
+    //detection counter
+    function updateDetectionCounter(detections) {
+        const counterContainer = document.getElementById('detectionCounter');
+        const counterItems = document.getElementById('counterItems');
         
-        // Canvas variables
-        let originalImage = null;
-        let canvas = null;
-        let ctx = null;
-        let detectionOverlays = [];
-
-        tabs.forEach(tab => {
-            tab.addEventListener("click", () => {
-                tabs.forEach(t => t.classList.remove("active"));
-                sections.forEach(s => s.classList.remove("active"));
-
-                tab.classList.add("active");
-                document.getElementById(tab.dataset.tab).classList.add("active");
-            });
+        if (!detections || detections.length === 0) {
+            counterContainer.style.display = 'none';
+            return;
+        }
+        
+        const classCounts = {};
+        detections.forEach(detection => {
+            const className = detection.class;
+            classCounts[className] = (classCounts[className] || 0) + 1;
         });
+        
+        const sortedClasses = Object.keys(classCounts).sort((a, b) => classCounts[b] - classCounts[a]);
+        
+        counterItems.innerHTML = '';
+        
+        sortedClasses.forEach(className => {
+            const count = classCounts[className];
+            const counterItem = document.createElement('div');
+            counterItem.className = 'counter-item';
+            counterItem.innerHTML = `
+                <span class="counter-class">${className}</span>
+                <span class="counter-count">${count}</span>
+            `;
+            counterItems.appendChild(counterItem);
+        });
+        
+        counterContainer.style.display = 'block';
+    }
 
-        async function initializeCanvas() {
-            // Create canvas if it doesn't exist
-            if (!canvas) {
-                canvas = document.createElement('canvas');
-                canvas.style.display = 'block';
-                canvas.style.maxWidth = '100%';
-                canvas.style.height = 'auto';
-                
-                const resultContainer = document.getElementById('resultContainer');
-                const resultImg = document.getElementById('resultImg');
-                
-                // Replace image with canvas
-                resultImg.style.display = 'none';
-                resultContainer.appendChild(canvas);
-                
-                ctx = canvas.getContext('2d');
-            }
-        }
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            tabs.forEach(t => t.classList.remove("active"));
+            sections.forEach(s => s.classList.remove("active"));
 
-        function drawImageWithFilter(selectedIds = null) {
-            if (!originalImage || !canvas || !ctx) return;
+            tab.classList.add("active");
+            document.getElementById(tab.dataset.tab).classList.add("active");
+        });
+    });
+
+    async function initializeCanvas() {
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.style.display = 'block';
+            canvas.style.maxWidth = '100%';
+            canvas.style.height = 'auto';
             
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const resultContainer = document.getElementById('resultContainer');
+            const resultImg = document.getElementById('resultImg');
             
-            // Draw original image
-            ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+            // Replace image with canvas
+            resultImg.style.display = 'none';
+            resultContainer.appendChild(canvas);
             
-            // Draw only selected detections (or all if null)
-            detectionOverlays.forEach(overlay => {
-                if (!selectedIds || selectedIds.includes(overlay.id)) {
-                    drawDetection(overlay);
-                }
-            });
-        }
-
-        function drawDetection(detection) {
-    const { bbox, class: className, confidence, color, mask } = detection;
-    
-    // Scale factors
-    const scaleX = canvas.width / originalImage.width;
-    const scaleY = canvas.height / originalImage.height;
-
-    const [x1, y1, x2, y2] = [
-        bbox[0] * scaleX,
-        bbox[1] * scaleY,
-        bbox[2] * scaleX,
-        bbox[3] * scaleY
-    ];
-
-    let bboxColor = '#ff0000'; // default
-    let rgbColor = [255, 0, 0]; // default RGB values
-    
-    if (Array.isArray(color)) {
-        bboxColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-        rgbColor = color;
-    } else if (typeof color === 'string') {
-        bboxColor = color;
-        if (color.startsWith('#')) {
-            const hex = color.replace('#', '');
-            rgbColor = [
-                parseInt(hex.substring(0, 2), 16),
-                parseInt(hex.substring(2, 4), 16),
-                parseInt(hex.substring(4, 6), 16)
-            ];
+            ctx = canvas.getContext('2d');
         }
     }
 
-    if (mask) {
-        const maskImg = new Image();
-        maskImg.onload = function() {
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            
-            tempCanvas.width = maskImg.width;
-            tempCanvas.height = maskImg.height;
-            
-            tempCtx.drawImage(maskImg, 0, 0);
-            
-            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-            const data = imageData.data;
-            
-            for (let i = 0; i < data.length; i += 4) {
-                if (data[i + 3] > 0) {
-                    data[i] = rgbColor[0];
-                    data[i + 1] = rgbColor[1];
-                    data[i + 2] = rgbColor[2];
-                }
+    function drawImageWithFilter(selectedIds = null) {
+        if (!originalImage || !canvas || !ctx) return;
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw original image
+        ctx.drawImage(originalImage, 0, 0, canvas.width, canvas.height);
+        
+        detectionOverlays.forEach(overlay => {
+            if (!selectedIds || selectedIds.includes(overlay.id)) {
+                drawDetection(overlay);
             }
-            
-            tempCtx.putImageData(imageData, 0, 0);
-            ctx.globalAlpha = 0.8;
-            ctx.drawImage(
-                tempCanvas, 
-                bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1],
-                x1, y1, x2 - x1, y2 - y1
-            );
-            ctx.globalAlpha = 1.0;
+        });
+    }
+
+    function drawDetection(detection) {
+        const { bbox, class: className, confidence, color, mask } = detection;
+        
+        // Scale factors
+        const scaleX = canvas.width / originalImage.width;
+        const scaleY = canvas.height / originalImage.height;
+
+        const [x1, y1, x2, y2] = [
+            bbox[0] * scaleX,
+            bbox[1] * scaleY,
+            bbox[2] * scaleX,
+            bbox[3] * scaleY
+        ];
+
+        let bboxColor = '#ff0000'; // default
+        let rgbColor = [255, 0, 0]; // default RGB values
+        
+        if (Array.isArray(color)) {
+            bboxColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            rgbColor = color;
+        } else if (typeof color === 'string') {
+            bboxColor = color;
+            if (color.startsWith('#')) {
+                const hex = color.replace('#', '');
+                rgbColor = [
+                    parseInt(hex.substring(0, 2), 16),
+                    parseInt(hex.substring(2, 4), 16),
+                    parseInt(hex.substring(4, 6), 16)
+                ];
+            }
+        }
+
+        if (mask) {
+            const maskImg = new Image();
+            maskImg.onload = function() {
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                tempCanvas.width = maskImg.width;
+                tempCanvas.height = maskImg.height;
+                
+                tempCtx.drawImage(maskImg, 0, 0);
+                
+                const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                const data = imageData.data;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    if (data[i + 3] > 0) {
+                        data[i] = rgbColor[0];
+                        data[i + 1] = rgbColor[1];
+                        data[i + 2] = rgbColor[2];
+                    }
+                }
+                
+                tempCtx.putImageData(imageData, 0, 0);
+                ctx.globalAlpha = 0.8;
+                ctx.drawImage(
+                    tempCanvas, 
+                    bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1],
+                    x1, y1, x2 - x1, y2 - y1
+                );
+                ctx.globalAlpha = 1.0;
+                ctx.strokeStyle = bboxColor;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                ctx.fillStyle = bboxColor.replace(')', ', 0.7)').replace('rgb', 'rgba');
+                ctx.fillRect(x1, y1 - 20, 150, 20);
+                ctx.fillStyle = 'white';
+                ctx.font = '14px Arial';
+                ctx.fillText(`${className}: ${(confidence * 100).toFixed(1)}%`, x1 + 5, y1 - 5);
+            };
+            maskImg.src = "data:image/png;base64," + mask;
+        } else {
+            // Fallback if no mask
             ctx.strokeStyle = bboxColor;
             ctx.lineWidth = 2;
             ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+
             ctx.fillStyle = bboxColor.replace(')', ', 0.7)').replace('rgb', 'rgba');
             ctx.fillRect(x1, y1 - 20, 150, 20);
+
             ctx.fillStyle = 'white';
             ctx.font = '14px Arial';
             ctx.fillText(`${className}: ${(confidence * 100).toFixed(1)}%`, x1 + 5, y1 - 5);
-        };
-        maskImg.src = "data:image/png;base64," + mask;
-    } else {
-        // Fallback if no mask
-        ctx.strokeStyle = bboxColor;
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-
-        ctx.fillStyle = bboxColor.replace(')', ', 0.7)').replace('rgb', 'rgba');
-        ctx.fillRect(x1, y1 - 20, 150, 20);
-
-        ctx.fillStyle = 'white';
-        ctx.font = '14px Arial';
-        ctx.fillText(`${className}: ${(confidence * 100).toFixed(1)}%`, x1 + 5, y1 - 5);
-    }
-}
-
-function prepareDetectionOverlays(detectionData) {
-    return detectionData.map((detection) => {
-        // Keep the original color array
-        return {
-            id: detection.id,
-            class: detection.class,
-            confidence: detection.confidence,
-            bbox: detection.bbox,
-            color: detection.color, // Keep as array [R, G, B]
-            mask: detection.mask || null
-        };
-    });
-}
-
-        // Client-side filtering function
-        function filterImage(selectedIds) {
-            drawImageWithFilter(selectedIds);
         }
+    }
 
-        document.getElementById("fileInput").addEventListener("change", async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            const formData = new FormData();
-            formData.append("image", file);
-
-            try {
-                const response = await fetch("/predict", {
-                    method: "POST",
-                    body: formData
-                });
-
-                const result = await response.json();
-                
-                if (result.error) {
-                    throw new Error(result.error);
-                }
-                
-                // Store the data globally
-                currentDetections = result.detections;
-                currentImageData = result.annotated_image;
-                currentDetectionData = result.detection_data || [];
-                originalImageData = result.original_image;
-                
-                // Initialize canvas
-                await initializeCanvas();
-                
-                // Load original image
-                originalImage = new Image();
-                originalImage.onload = function() {
-                    // Set canvas size to match image
-                    canvas.width = originalImage.width;
-                    canvas.height = originalImage.height;
-                    
-                    // Prepare detection overlays
-                    detectionOverlays = prepareDetectionOverlays(currentDetectionData);
-                    
-                    // Draw image with all detections
-                    drawImageWithFilter();
-                };
-                originalImage.src = "data:image/jpeg;base64," + originalImageData;
-                
-                // Update the detection cards
-                updateDetectionCards(currentDetections);
-                
-                // Update recommendations
-                updateRecommendations(currentDetections);
-                
-            } catch (error) {
-                console.error("Error:", error);
-                alert("An error occurred while processing the image: " + error.message);
-            }
+    function prepareDetectionOverlays(detectionData) {
+        return detectionData.map((detection) => {
+            return {
+                id: detection.id,
+                class: detection.class,
+                confidence: detection.confidence,
+                bbox: detection.bbox,
+                color: detection.color,
+                mask: detection.mask || null
+            };
         });
+    }
 
-        function updateDetectionCards(detections) {
-            const container = document.getElementById("detectionsContainer");
-            container.innerHTML = "";
+    // Client-side filtering function
+    function filterImage(selectedIds) {
+        drawImageWithFilter(selectedIds);
+    }
+
+    document.getElementById("fileInput").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const response = await fetch("/predict", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
             
-            if (!detections || detections.length === 0) {
-                container.innerHTML = `
-                    <div class="card">
-                        <h3>No Issues Detected</h3>
-                        <p>No dental issues were detected in this X-ray.</p>
-                    </div>
-                `;
-                return;
+            if (result.error) {
+                throw new Error(result.error);
             }
             
-            // Add filter controls
-            const filterControls = document.createElement("div");
-            filterControls.style.marginBottom = "15px";
-            filterControls.innerHTML = `
-                <button id="showAllBtn" class="filter-btn active" style="margin-right: 10px; padding: 8px 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                    Show All
-                </button>
-                <span style="font-weight: bold;">Filter by class:</span>
-            `;
-            container.appendChild(filterControls);
+            currentDetections = result.detections;
+            currentImageData = result.annotated_image;
+            currentDetectionData = result.detection_data || [];
+            originalImageData = result.original_image;
             
-            // Add click event to Show All button
-            document.getElementById("showAllBtn").addEventListener("click", () => {
+            await initializeCanvas();
+            
+            // Load original image
+            originalImage = new Image();
+            originalImage.onload = function() {
+                canvas.width = originalImage.width;
+                canvas.height = originalImage.height;
+                
+                // Prepare detection overlays
+                detectionOverlays = prepareDetectionOverlays(currentDetectionData);
+                
+                // Draw image with all detections
+                drawImageWithFilter();
+            };
+            originalImage.src = "data:image/jpeg;base64," + originalImageData;
+            
+            // Update the detection cards
+            updateDetectionCards(currentDetections);
+            
+            // Update detection counter
+            updateDetectionCounter(currentDetections);
+            
+            // Update recommendations
+            updateRecommendations(currentDetections);
+            
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while processing the image: " + error.message);
+        }
+    });
+
+    function updateDetectionCards(detections) {
+        const container = document.getElementById("detectionsContainer");
+        container.innerHTML = "";
+        
+        if (!detections || detections.length === 0) {
+            container.innerHTML = `
+                <div class="card">
+                    <h3>No Issues Detected</h3>
+                    <p>No dental issues were detected in this X-ray.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        //filter controls
+        const filterControls = document.createElement("div");
+        filterControls.style.marginBottom = "15px";
+        filterControls.innerHTML = `
+            <button id="showAllBtn" class="filter-btn active" style="margin-right: 10px; padding: 8px 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Show All
+            </button>
+            <span style="font-weight: bold;">Filter by class:</span>
+        `;
+        container.appendChild(filterControls);
+        
+        //click event to Show All button
+        document.getElementById("showAllBtn").addEventListener("click", () => {
+            document.querySelectorAll(".class-filter-btn").forEach(btn => {
+                btn.classList.remove("active");
+            });
+            document.getElementById("showAllBtn").classList.add("active");
+            
+            activeFilter = null;
+            renderDetectionCards(currentDetections);
+            
+            // Show all detections on canvas
+            filterImage(null);
+            
+        });
+        
+        // Create a card for each detection
+        renderDetectionCards(detections);
+        
+        //class filter buttons
+        const uniqueClasses = [...new Set(detections.map(d => d.class))];
+        uniqueClasses.forEach(className => {
+            const filterBtn = document.createElement("button");
+            filterBtn.textContent = className;
+            filterBtn.className = "class-filter-btn";
+            filterBtn.style.margin = "5px";
+            filterBtn.style.padding = "5px 10px";
+            filterBtn.style.backgroundColor = "#ecf0f1";
+            filterBtn.style.border = "none";
+            filterBtn.style.borderRadius = "4px";
+            filterBtn.style.cursor = "pointer";
+            
+            filterBtn.addEventListener("click", () => {
                 document.querySelectorAll(".class-filter-btn").forEach(btn => {
                     btn.classList.remove("active");
                 });
-                document.getElementById("showAllBtn").classList.add("active");
+                document.getElementById("showAllBtn").classList.remove("active");
+                filterBtn.classList.add("active");
                 
-                activeFilter = null;
-                renderDetectionCards(currentDetections);
+                activeFilter = className;
+                const filteredDetections = currentDetections.filter(d => d.class === className);
+                renderDetectionCards(filteredDetections);
                 
-                // Show all detections on canvas
-                filterImage(null);
+                // Filter image to show only this class
+                const classIds = filteredDetections.map(d => d.id);
+                filterImage(classIds);
+                
             });
             
-            // Create a card for each detection
-            renderDetectionCards(detections);
+            filterControls.appendChild(filterBtn);
+        });
+    }
+
+    function renderDetectionCards(detections) {
+        const container = document.getElementById("detectionsContainer");
+        
+        // Remove existing cards (but keep filter controls)
+        const filterControls = container.querySelector("div");
+        const existingCards = container.querySelectorAll(".detection-card");
+        existingCards.forEach(card => card.remove());
+        
+        if (!detections || detections.length === 0) {
+            const noResults = document.createElement("div");
+            noResults.className = "card";
+            noResults.innerHTML = `
+                <h3>No Matching Issues</h3>
+                <p>No dental issues match the current filter.</p>
+            `;
+            container.appendChild(noResults);
+            return;
+        }
+        
+        //card creation
+        detections.forEach((detection) => {
+            const card = document.createElement("div");
+            card.className = "detection-card";
+            card.style.cursor = "pointer";
+            card.style.transition = "all 0.3s ease";
+            card.dataset.detectionId = detection.id;
             
-            // Add class filter buttons
-            const uniqueClasses = [...new Set(detections.map(d => d.class))];
-            uniqueClasses.forEach(className => {
-                const filterBtn = document.createElement("button");
-                filterBtn.textContent = className;
-                filterBtn.className = "class-filter-btn";
-                filterBtn.style.margin = "5px";
-                filterBtn.style.padding = "5px 10px";
-                filterBtn.style.backgroundColor = "#ecf0f1";
-                filterBtn.style.border = "none";
-                filterBtn.style.borderRadius = "4px";
-                filterBtn.style.cursor = "pointer";
+            card.innerHTML = `
+                <h4>${detection.class}</h4>
+                <p>ID: ${detection.id}</p>
+                <p>Confidence: <span class="confidence">${(detection.confidence * 100).toFixed(1)}%</span></p>
+                <button class="focus-btn" style="margin-top: 10px; padding: 5px 10px; font-size: 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">
+                </button>
+            `;
+            
+            //click event for single
+            const focusBtn = card.querySelector(".focus-btn");
+            focusBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
                 
-                filterBtn.addEventListener("click", () => {
-                    document.querySelectorAll(".class-filter-btn").forEach(btn => {
-                        btn.classList.remove("active");
-                    });
-                    document.getElementById("showAllBtn").classList.remove("active");
-                    filterBtn.classList.add("active");
-                    
-                    activeFilter = className;
-                    const filteredDetections = currentDetections.filter(d => d.class === className);
-                    renderDetectionCards(filteredDetections);
-                    
-                    // Filter image to show only this class
-                    const classIds = filteredDetections.map(d => d.id);
-                    filterImage(classIds);
+                const filteredDetections = currentDetections.filter(d => d.id === detection.id);
+                renderDetectionCards(filteredDetections);
+                
+                document.querySelectorAll(".class-filter-btn").forEach(btn => {
+                    btn.classList.remove("active");
+                });
+                document.getElementById("showAllBtn").classList.remove("active");
+                
+                //Filter image
+                filterImage([detection.id]);
+                
+            });
+            
+            //click event for card
+            card.addEventListener("click", () => {
+                document.querySelectorAll('.detection-card').forEach(c => {
+                    c.style.border = 'none';
+                    c.style.backgroundColor = '';
                 });
                 
-                filterControls.appendChild(filterBtn);
-            });
-        }
-
-        function renderDetectionCards(detections) {
-            const container = document.getElementById("detectionsContainer");
-            
-            // Remove existing cards (but keep filter controls)
-            const filterControls = container.querySelector("div");
-            const existingCards = container.querySelectorAll(".detection-card");
-            existingCards.forEach(card => card.remove());
-            
-            if (!detections || detections.length === 0) {
-                const noResults = document.createElement("div");
-                noResults.className = "card";
-                noResults.innerHTML = `
-                    <h3>No Matching Issues</h3>
-                    <p>No dental issues match the current filter.</p>
-                `;
-                container.appendChild(noResults);
-                return;
-            }
-            
-            // Create a card for each detection
-            detections.forEach((detection) => {
-                const card = document.createElement("div");
-                card.className = "detection-card";
-                card.style.cursor = "pointer";
-                card.style.transition = "all 0.3s ease";
-                card.dataset.detectionId = detection.id;
-                
-                card.innerHTML = `
-                    <h4>${detection.class}</h4>
-                    <p>ID: ${detection.id}</p>
-                    <p>Confidence: <span class="confidence">${(detection.confidence * 100).toFixed(1)}%</span></p>
-                    <button class="focus-btn" style="margin-top: 10px; padding: 5px 10px; font-size: 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">
-                    </button>
-                `;
-                
-                // Add click event to focus on this specific detection
-                const focusBtn = card.querySelector(".focus-btn");
-                focusBtn.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    
-                    const filteredDetections = currentDetections.filter(d => d.id === detection.id);
-                    renderDetectionCards(filteredDetections);
-                    
-                    document.querySelectorAll(".class-filter-btn").forEach(btn => {
-                        btn.classList.remove("active");
-                    });
-                    document.getElementById("showAllBtn").classList.remove("active");
-                    
-                    // Filter image to show only this detection
+                if (card.style.border !== '2px solid #3498db') {
+                    card.style.border = '2px solid #3498db';
+                    card.style.backgroundColor = '#f0f8ff';
                     filterImage([detection.id]);
-                });
-                
-                // Add click event to the entire card
-                card.addEventListener("click", () => {
-                    document.querySelectorAll('.detection-card').forEach(c => {
-                        c.style.border = 'none';
-                        c.style.backgroundColor = '';
-                    });
-                    
-                    if (card.style.border !== '2px solid #3498db') {
-                        card.style.border = '2px solid #3498db';
-                        card.style.backgroundColor = '#f0f8ff';
-                        filterImage([detection.id]);
-                    } else {
-                        card.style.border = 'none';
-                        card.style.backgroundColor = '';
-                        filterImage(null); // Show all detections
-                    }
-                });
-                
-                // Add hover effect
-                card.addEventListener("mouseenter", () => {
-                    card.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
-                    card.style.transform = "translateY(-2px)";
-                });
-                
-                card.addEventListener("mouseleave", () => {
-                    if (card.style.border !== '2px solid #3498db') {
-                        card.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
-                    }
-                    card.style.transform = "translateY(0)";
-                });
-                
-                container.appendChild(card);
+                } else {
+                    card.style.border = 'none';
+                    card.style.backgroundColor = '';
+                    filterImage(null);
+                }
             });
-        }
-
-        function updateRecommendations(detections) {
-            const container = document.getElementById("recommendationsList");
-            container.innerHTML = "";
             
-            if (!detections || detections.length === 0) {
-                container.innerHTML = `
-                    <p>No specific recommendations needed. Maintain good oral hygiene and regular checkups.</p>
-                `;
-                return;
+            //hover effect
+            card.addEventListener("mouseenter", () => {
+                card.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+                card.style.transform = "translateY(-2px)";
+            });
+            
+            card.addEventListener("mouseleave", () => {
+                if (card.style.border !== '2px solid #3498db') {
+                    card.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+                }
+                card.style.transform = "translateY(0)";
+            });
+            
+            container.appendChild(card);
+        });
+    }
+
+    function updateRecommendations(detections) {
+        const container = document.getElementById("recommendationsList");
+        container.innerHTML = "";
+        
+        if (!detections || detections.length === 0) {
+            container.innerHTML = `
+                <p>No specific recommendations needed. Maintain good oral hygiene and regular checkups.</p>
+            `;
+            return;
+        }
+        
+        const ul = document.createElement("ul");
+        
+        detections.forEach(detection => {
+            const li = document.createElement("li");
+            
+            // Custom recommendations based on detection class
+            const className = detection.class.toLowerCase();
+            
+            if (className.includes("caries") || className.includes("decay")) {
+                li.textContent = `For ${detection.class}: Dental filling is recommended to prevent further decay.`;
+            } else if (className.includes("crack") || className.includes("fracture")) {
+                li.textContent = `For ${detection.class}: Dental crown may be needed to protect the tooth.`;
+            } else if (className.includes("infection") || className.includes("lesion")) {
+                li.textContent = `For ${detection.class}: Root canal treatment may be necessary.`;
+            } else if (className.includes("missing")) {
+                li.textContent = `For ${detection.class}: Consider dental implants or bridges.`;
+            } else {
+                li.textContent = `For ${detection.class}: Further examination by a dentist is recommended.`;
             }
             
-            const ul = document.createElement("ul");
-            
-            detections.forEach(detection => {
-                const li = document.createElement("li");
-                
-                // Custom recommendations based on detection class
-                const className = detection.class.toLowerCase();
-                
-                if (className.includes("caries") || className.includes("decay")) {
-                    li.textContent = `For ${detection.class}: Dental filling is recommended to prevent further decay.`;
-                } else if (className.includes("crack") || className.includes("fracture")) {
-                    li.textContent = `For ${detection.class}: Dental crown may be needed to protect the tooth.`;
-                } else if (className.includes("infection") || className.includes("lesion")) {
-                    li.textContent = `For ${detection.class}: Root canal treatment may be necessary.`;
-                } else if (className.includes("missing")) {
-                    li.textContent = `For ${detection.class}: Consider dental implants or bridges.`;
-                } else {
-                    li.textContent = `For ${detection.class}: Further examination by a dentist is recommended.`;
-                }
-                
-                ul.appendChild(li);
-            });
-            
-            const generalLi = document.createElement("li");
-            generalLi.textContent = "Maintain improved oral hygiene practices and schedule regular dental visits.";
-            ul.appendChild(generalLi);
-            
-            container.appendChild(ul);
-        }
-    </script>
+            ul.appendChild(li);
+        });
+        
+        const generalLi = document.createElement("li");
+        generalLi.textContent = "Maintain improved oral hygiene practices and schedule regular dental visits.";
+        ul.appendChild(generalLi);
+        
+        container.appendChild(ul);
+    }
+</script>
 </body>
 </html>
