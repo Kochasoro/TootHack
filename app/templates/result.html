@@ -817,6 +817,7 @@
             card.innerHTML = `
                 <h4>${detection.class}</h4>
                 <p>ID: ${detection.id}</p>
+                <p>Description: ${detection.description}</p>
                 <p>Confidence: <span class="confidence">${(detection.confidence * 100).toFixed(1)}%</span></p>
                 <button class="focus-btn" style="margin-top: 10px; padding: 5px 10px; font-size: 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">
                 </button>

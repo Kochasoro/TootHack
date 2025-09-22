@@ -32,6 +32,24 @@ class_names = [
     "post - core", "wire",
 ]
 
+# Class descriptions
+class_descriptions = {
+    "Caries": "Tooth decay or cavities caused by bacterial activity that damages tooth enamel.",
+    "Crown": "A dental restoration that completely caps or encircles a tooth or dental implant.",
+    "Filling": "Material used to restore the function and morphology of missing tooth structure.",
+    "Implant": "A surgical component that interfaces with the bone of the jaw to support a dental prosthesis.",
+    "Mandibular Canal": "The canal within the mandible that contains the inferior alveolar nerve and blood vessels.",
+    "Missing teeth": "Absence of one or more teeth in the dental arch.",
+    "Periapical lesion": "Pathological changes in the bone around the apex of a tooth root, often due to infection.",
+    "Root Canal Treatment": "A treatment sequence for the infected pulp of a tooth which results in the elimination of infection.",
+    "Root Piece": "Fragment of a tooth root remaining in the jaw after tooth extraction or fracture.",
+    "Impacted Tooth": "A tooth that has failed to erupt fully into its expected position.",
+    "maxillary sinus": "The air-filled space located within the maxilla bone, above the teeth.",
+    "Bone Loss": "Reduction in bone density and volume around teeth, often due to periodontal disease.",
+    "post - core": "A foundation restoration for a tooth requiring a crown when there's insufficient tooth structure.",
+    "wire": "Orthodontic wire used in braces to guide tooth movement and alignment.",
+}
+
 np.random.seed(42)
 colors = {i: tuple(np.random.randint(0, 255, 3).tolist()) for i in range(len(class_names))}
 
@@ -100,6 +118,7 @@ def run_inference(pil_image):
             detection_id = detection_ids[i]
             class_name = class_names[label-1]
             color = colors[label-1]
+            description = class_descriptions.get(class_name, "No description available.")
 
             cv2.rectangle(img, (box[0], box[1]), (box[2], box[3]), color, 2)
             
@@ -141,6 +160,7 @@ def run_inference(pil_image):
             detection_data.append({
                 "id": detection_id,
                 "class": class_name,
+                "description": description,
                 "confidence": float(score),
                 "bbox": box.tolist(),
                 "color": color,
@@ -150,6 +170,7 @@ def run_inference(pil_image):
             detections.append({
                 "id": detection_id,
                 "class": class_name,
+                "description": description,
                 "confidence": float(score),
                 "bbox": box.tolist()
             })
