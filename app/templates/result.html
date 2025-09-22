@@ -190,7 +190,36 @@
         .footer-btn button:hover {
             background-color: #34495e;
         }
-        
+        #detectionsContainer {
+            max-height: 700px; /* Adjust this value as needed */
+            overflow-y: auto;
+            padding-right: 10px; /* Add some padding so scrollbar doesn't overlap content */
+        }
+
+        /* Custom scrollbar styling */
+        #detectionsContainer::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #detectionsContainer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        #detectionsContainer::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        #detectionsContainer::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* For Firefox */
+        #detectionsContainer {
+            scrollbar-width: thin;
+            scrollbar-color: #c1c1c1 #f1f1f1;
+        }
         /* Detection cards */
         .detection-card {
             background: white;
