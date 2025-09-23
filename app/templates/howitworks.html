@@ -4,13 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TootHack - Need Help</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    * {margin:0; padding:0; box-sizing:border-box;}
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
 
     body, html {
       height: 100%;
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif; 
       overflow: hidden; 
+      background-color: #f4f7fb;
+    }
+
+   
+    h1, h2, h3, h4, h5, h6,
+    .hero,
+    .tab-menu button {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    
+    p, li, ul, .tab-content, .faq-answer, .clinic-info, .contact-card {
+      font-family: 'Poppins', sans-serif;
     }
 
     /* Header */
@@ -24,6 +44,8 @@
       z-index: 1000;
       background: transparent;
       color: white;
+      margin-left: 60px;   
+      margin-right: 20px;
     }
 
     header h1 {
@@ -100,11 +122,14 @@
       border-radius: 50px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
       overflow-y: auto;
+       margin-left: 33px;   
+      margin-right: 20px;  
     }
 
     .tab-content {
       font-size: 18px;
       line-height: 1.8;
+      justify-content: center;
     }
 
     .tab-content h3{
@@ -165,6 +190,7 @@
       box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
       overflow: hidden;
       text-align: left;
+      justify-content: center;
     }
     .clinic-card img {
       width: 100%;
@@ -309,6 +335,90 @@
       font-size: 18px;
       padding: 5px 0;
     }
+
+    /* === ANIMATIONS === */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes zoomIn {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* === APPLYING ANIMATIONS === */
+
+
+
+.tab-menu button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #0056b3, #0094cc);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+
+/* Headings inside content */
+.tab-content h3, 
+.tab-content p, 
+.tab-content ul {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.disclaimer {
+  opacity: 0;
+  animation: fadeIn 0.9s ease forwards;
+}
+
+.disclaimer-text {
+  opacity: 0;
+  animation: fadeIn 0.9s ease forwards;
+}
+
+
+/* Clinic cards animation */
+.clinic-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: zoomIn 0.8s ease forwards;
+}
+.clinic-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0px 6px 18px rgba(0,0,0,0.25);
+}
+.clinic-card img {
+  transition: transform 0.4s ease;
+}
+.clinic-card img:hover {
+  transform: scale(1.05);
+}
+
+/* FAQ items animation */
+.faq-item {
+  animation: fadeInUp 0.9s ease forwards;
+  transition: all 0.3s ease;
+}
+.faq-question:hover {
+  color: #0056b3;
+  transform: translateX(5px);
+}
+
+/* Contact cards */
+.contact-card {
+  background: #f9f9f9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: zoomIn 1s ease forwards;
+}
+.contact-card:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.2);
+}
+.contact-card img {
+  animation: fadeIn 1s ease forwards;
+}
+
   </style>
 </head>
 <body>
