@@ -758,6 +758,7 @@
             document.getElementById("showAllBtn").classList.add("active");
             
             activeFilter = null;
+            selectedDetections.clear();
             renderDetectionCards(currentDetections);
             
             // Show all detections on canvas
@@ -790,6 +791,7 @@
                 
                 activeFilter = className;
                 const filteredDetections = currentDetections.filter(d => d.class === className);
+                selectedDetections.clear();
                 renderDetectionCards(filteredDetections);
                 
                 // Filter image to show only this class
@@ -839,39 +841,33 @@
                 </button>
             `;
             
-            //click event for single
-            const focusBtn = card.querySelector(".focus-btn");
-            focusBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                
-                const filteredDetections = currentDetections.filter(d => d.id === detection.id);
-                renderDetectionCards(filteredDetections);
-                
-                document.querySelectorAll(".class-filter-btn").forEach(btn => {
-                    btn.classList.remove("active");
-                });
-                document.getElementById("showAllBtn").classList.remove("active");
-                
-                //Filter image
-                filterImage([detection.id]);
-                
-            });
-            
-            //click event for card
+            //click event
             card.addEventListener("click", () => {
-                document.querySelectorAll('.detection-card').forEach(c => {
-                    c.style.border = 'none';
-                    c.style.backgroundColor = '';
-                });
-                
-                if (card.style.border !== '2px solid #3498db') {
-                    card.style.border = '2px solid #3498db';
-                    card.style.backgroundColor = '#f0f8ff';
-                    filterImage([detection.id]);
-                } else {
+                const cardId = detection.id;
+
+                if (selectedDetections.has(cardId)) {
+                    // Deselect this card
+                    selectedDetections.delete(cardId);
                     card.style.border = 'none';
                     card.style.backgroundColor = '';
-                    filterImage(null);
+                } else {
+                    // Select this card
+                    selectedDetections.add(cardId);
+                    card.style.border = '2px solid #3498db';
+                    card.style.backgroundColor = '#f0f8ff';
+                }
+
+                if (selectedDetections.size > 0) {
+                    // Show only selected cards
+                    filterImage(Array.from(selectedDetections));
+                } else {
+                    if (activeFilter) {
+                        const filteredDetections = currentDetections.filter(d => d.class === activeFilter);
+                        renderDetectionCards(filteredDetections);
+                        filterImage(filteredDetections.map(d => d.id));
+                    } else {
+                        filterImage(null);
+                    }
                 }
             });
             
