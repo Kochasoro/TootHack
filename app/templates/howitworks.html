@@ -4,13 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TootHack - Need Help</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    * {margin:0; padding:0; box-sizing:border-box;}
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
 
     body, html {
       height: 100%;
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif; 
       overflow: hidden; 
+      background-color: #f4f7fb;
+    }
+
+   
+    h1, h2, h3, h4, h5, h6,
+    .hero,
+    .tab-menu button {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    
+    p, li, ul, .tab-content, .faq-answer, .clinic-info, .contact-card {
+      font-family: 'Poppins', sans-serif;
     }
 
     /* Header */
@@ -24,6 +44,8 @@
       z-index: 1000;
       background: transparent;
       color: white;
+      margin-left: 60px;   
+      margin-right: 20px;
     }
 
     header h1 {
@@ -100,11 +122,14 @@
       border-radius: 50px;
       box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
       overflow-y: auto;
+       margin-left: 33px;   
+      margin-right: 20px;  
     }
 
     .tab-content {
       font-size: 18px;
       line-height: 1.8;
+      justify-content: center;
     }
 
     .tab-content h3{
@@ -165,6 +190,7 @@
       box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
       overflow: hidden;
       text-align: left;
+      justify-content: center;
     }
     .clinic-card img {
       width: 100%;
