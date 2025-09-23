@@ -49,6 +49,22 @@ class_descriptions = {
     "post - core": "A foundation restoration for a tooth requiring a crown when there's insufficient tooth structure.",
     "wire": "Orthodontic wire used in braces to guide tooth movement and alignment.",
 }
+class_type = {
+    "Caries": "Disease",
+    "Periapical lesion": "Disease", 
+    "Bone Loss": "Disease",
+    "Impacted Tooth": "Condition",
+    "Missing teeth": "Condition",
+    "Root Piece": "Condition",
+    "Mandibular Canal": "Anatomy",
+    "maxillary sinus": "Anatomy",
+    "Crown": "Previous Dental Work",
+    "Filling": "Previous Dental Work",
+    "Implant": "Previous Dental Work", 
+    "Root Canal Treatment": "Previous Dental Work",
+    "post - core": "Previous Dental Work",
+    "wire": "Previous Dental Work"
+}
 
 np.random.seed(42)
 colors = {i: tuple(np.random.randint(0, 255, 3).tolist()) for i in range(len(class_names))}
@@ -119,7 +135,7 @@ def run_inference(pil_image):
             class_name = class_names[label-1]
             color = colors[label-1]
             description = class_descriptions.get(class_name, "No description available.")
-
+            types = class_type.get(class_name, "Unkown.")
             cv2.rectangle(img, (box[0], box[1]), (box[2], box[3]), color, 2)
             
             label_text = f"ID:{detection_id} {class_name} {score:.2f}"
@@ -161,6 +177,7 @@ def run_inference(pil_image):
                 "id": detection_id,
                 "class": class_name,
                 "description": description,
+                "types": types,
                 "confidence": float(score),
                 "bbox": box.tolist(),
                 "color": color,
@@ -171,6 +188,7 @@ def run_inference(pil_image):
                 "id": detection_id,
                 "class": class_name,
                 "description": description,
+                "types": types,
                 "confidence": float(score),
                 "bbox": box.tolist()
             })

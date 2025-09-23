@@ -248,7 +248,22 @@
             font-size: 12px;
             color: #7f8c8d;
         }
-        
+        .types {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white; /* Better contrast with colored backgrounds */
+            text-transform: uppercase;
+        }
+
+        /* Type-specific background colors */
+        .types[data-type="Disease"] { background-color: #e74c3c; }
+        .types[data-type="Condition"] { background-color: #f39c12; }
+        .types[data-type="Anatomy"] { background-color: #27ae60; }
+        .types[data-type="Previous Dental Work"] { background-color: #3498db; }
+        .types[data-type="Unknown"] { background-color: #95a5a6; }
         /* Canvas Container */
         #resultContainer {
             position: relative;
@@ -466,7 +481,7 @@
     let currentDetectionData = [];
     let originalImageData = null;
     let activeFilter = null;
-    
+    let selectedDetections = new Set();
     let originalImage = null;
     let canvas = null;
     let ctx = null;
@@ -813,9 +828,10 @@
             card.style.cursor = "pointer";
             card.style.transition = "all 0.3s ease";
             card.dataset.detectionId = detection.id;
-            
+
             card.innerHTML = `
                 <h4>${detection.class}</h4>
+                <p><span class="types" data-type="${detection.types}">${detection.types}</span></p>
                 <p>ID: ${detection.id}</p>
                 <p>Description: ${detection.description}</p>
                 <p>Confidence: <span class="confidence">${(detection.confidence * 100).toFixed(1)}%</span></p>
