@@ -1,163 +1,182 @@
-<!-- Font Awesome Icons CDN -->
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Sidebar with Mini Nav</title>
 
-<style>
-  /* Sidebar */
-  .sidebar {
-    height: 100vh;
-    width: 220px;
-    position: fixed;
-    top: 0;
-    left: -220px;
-    background-color: #f8f9fa;
-    overflow-x: hidden;
-    padding-top: 60px;
-    transition: left 0.3s ease;
-    z-index: 1001;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
+  <!-- Bootstrap 5 CSS -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" 
+    crossorigin="anonymous">
 
-  .sidebar .sidebar-burger {
-  position: absolute;
-  top: 12px;
-  left: 16px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-  z-index: 1002;
-}
+  <!-- Font Awesome -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  .sidebar.open {
-    left: 0;
-  }
-
-  .sidebar a {
-    padding: 12px 20px;
-    text-decoration: none;
-    font-size: 16px;
-    color: #333;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.2s;
-  }
-
-  .sidebar a i {
-    margin-right: 10px;
-    color: #007bff;
-    min-width: 20px;
-    text-align: center;
-  }
-
-  .sidebar a:hover {
-    background-color: #ddd;
-  }
-
-  .sidebar a.active {
-    color: #007bff;
-    font-weight: bold;
-  }
-
-  /* Mini vertical nav with full height */
-  .mini-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 12px;
-    background-color: #ffffff;
-    border-right: 1px solid #ddd;
-    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.05);
-    z-index: 1099;
-    transition: opacity 0.3s ease;
-    gap: 18px;
-  }
-
-  .mini-nav.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .mini-nav button.burger {
-    font-size: 24px;
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-
-  .mini-nav a {
-    font-size: 20px;
-    color: #007bff;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 10px 0;
-  }
-
-  .mini-nav a:hover {
-    background-color: #f1f1f1;
-    color: #0056b3;
-  }
-
-  /* Overlay */
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 0;
-    z-index: 1000;
-    transition: width 0.3s ease;
-    overflow: hidden;
-  }
-
-  .overlay.open {
-    width: 100%;
-  }
-
-  @media (min-width: 768px) {
-    body.sidebar-open {
-      margin-left: 220px;
+  <style>
+    /* Sidebar */
+    .sidebar {
+      height: 100vh;
+      width: 200px; /* wider to fit icons + labels */
+      position: fixed;
+      top: 0;
+      left: -200px;
+      background-color: #f8f9fa;
+      padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1001;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     }
-  }
-</style>
 
-<!-- Mini Vertical Icon Navigation with burger inside -->
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar .sidebar-burger {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .sidebar a {
+      padding: 14px 20px;
+      text-decoration: none;
+      font-size: 16px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background-color 0.2s;
+    }
+
+    .sidebar a i {
+      font-size: 20px;
+      color: #007bff;
+    }
+
+    .sidebar a:hover {
+      background-color: #ddd;
+    }
+
+    .sidebar a.active i {
+      color: #0056b3;
+    }
+
+    /* Mini vertical nav */
+    .mini-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 12px;
+      background-color: #ffffff;
+      border-right: 1px solid #ddd;
+      box-shadow: 2px 0 2px rgba(0, 0, 0, 0.05);
+      z-index: 1099;
+      transition: opacity 0.3s ease;
+      gap: 18px;
+    }
+
+    .mini-nav.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .mini-nav button.burger {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #007bff;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .mini-nav a {
+      font-size: 22px;
+      color: #007bff;
+      text-decoration: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 12px 0;
+    }
+
+    .mini-nav a:hover {
+      background-color: #f1f1f1;
+      color: #0056b3;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 0;
+      z-index: 1000;
+      transition: width 0.3s ease;
+      overflow: hidden;
+    }
+
+    .overlay.open {
+      width: 100%;
+    }
+
+    /* Prevent page scrolling when sidebar is open */
+    body.lock-scroll {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mini Vertical Icon Navigation -->
 <div class="mini-nav" id="miniNav">
   <button class="burger" onclick="toggleSidebar()">☰</button>
-  <a href="{{ url_for('main.home') }}" title="Home"><i class="fas fa-home"></i></a>
-  <a href="{{ url_for('main.howitworks') }}" title="How it Works"><i class="fas fa-info-circle"></i></a>
-  <a href="{{ url_for('main.result') }}" title="Upload X-Ray"><i class="fas fa-upload"></i></a>
+  <a href="{{ url_for('main.home') }}" title="Home" data-bs-toggle="tooltip" data-bs-placement="right"><i class="fas fa-home"></i></a>
+  <a href="{{ url_for('main.howitworks') }}" title="How it Works" data-bs-toggle="tooltip" data-bs-placement="right"><i class="fas fa-info-circle"></i></a>
+  <a href="{{ url_for('main.result') }}" title="Upload X-Ray" data-bs-toggle="tooltip" data-bs-placement="right"><i class="fas fa-upload"></i></a>
 </div>
 
 <!-- Sidebar -->
 <div id="mySidebar" class="sidebar">
-  <button class="burger sidebar-burger" onclick="toggleSidebar()">☰</button>
-  <a href="{{ url_for('main.home') }}" class="{% if active_page == 'home' %}active{% endif %}">
+  <button class="sidebar-burger" onclick="toggleSidebar()">
+  <i class="fas fa-times"></i>
+</button>
+  <a href="{{ url_for('main.home') }}" class="{% if active_page == 'home' %}active{% endif %}" title="Home">
     <i class="fas fa-home"></i> Home
   </a>
-  <a href="{{ url_for('main.howitworks') }}" class="{% if active_page == 'howitworks' %}active{% endif %}">
+  <a href="{{ url_for('main.howitworks') }}" class="{% if active_page == 'howitworks' %}active{% endif %}" title="How it Works">
     <i class="fas fa-info-circle"></i> How it Works
   </a>
-  <a href="{{ url_for('main.result') }}" class="{% if active_page == 'upload' %}active{% endif %}">
+  <a href="{{ url_for('main.result') }}" class="{% if active_page == 'upload' %}active{% endif %}" title="Upload X-Ray">
     <i class="fas fa-upload"></i> Upload X-Ray
   </a>
 </div>
 
 <!-- Overlay -->
 <div id="sidebarOverlay" class="overlay" onclick="toggleSidebar()"></div>
+
+<!-- Bootstrap JS Bundle -->
+<script 
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" 
+  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" 
+  crossorigin="anonymous"></script>
 
 <script>
   function toggleSidebar() {
@@ -171,13 +190,21 @@
     if (isOpen) {
       sidebar.classList.remove("open");
       overlay.classList.remove("open");
-      body.classList.remove("sidebar-open");
+      body.classList.remove("lock-scroll");
       miniNav.classList.remove("hidden");
     } else {
       sidebar.classList.add("open");
       overlay.classList.add("open");
-      body.classList.add("sidebar-open");
+      body.classList.add("lock-scroll");
       miniNav.classList.add("hidden");
     }
   }
+
+  // Enable Bootstrap tooltips
+  document.addEventListener("DOMContentLoaded", () => {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+  });
 </script>
+</body>
+</html>
