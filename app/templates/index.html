@@ -4,161 +4,314 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TootHack</title>
+
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      overflow-y: scroll;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background-color: #fff;
-      border-bottom: 1px solid #ddd;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-    nav a {
-      margin: 0 12px;
-      text-decoration: none;
-      color: black;
-      font-size: 14px;
-    }
-    nav a:hover {
-      color: #4faeff;
-      text-decoration: underline;
-    }
+    b/* Reset & font setup */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    nav a.active {
-      color: #4faeff;
-    }
+/* Global font: Roboto for readability */
+body {
+  font-family: 'Roboto', sans-serif;
+  padding: 0 0 0 60px; 
+  text-align: center;
+  overflow-y: scroll;
+}
 
-    .home img {
-      width: 100%;
-      height: 550px;
-      display: block;
-    }
-    .content {
-      padding: 30px;
-    }
-    .content h2 {
-      margin-bottom: 10px;
-    }
-    .content p {
-      max-width: 600px;
-      margin: 0 auto 20px;
-      font-size: 14px;
-      color: #333;
-    }
-    .buttons a {
-      display: inline-block;
-      margin: 5px;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-decoration: none;
-      color: white;
-      background-color: #007bff;
-      font-size: 14px;
-      border-radius: 30px;
-    }
-    .buttons a:hover {
-      background-color: #0056b3;
-    }
-    .cavity-section {
-      padding: 40px;
-      background-color: #cce7f3;
-    }
-    .cavity-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .cavity-text {
-      max-width: 500px;
-      margin: 20px;
-      text-align: left;
-    }
-    .cavity-text h2 {
-      font-size:30px;
-      font-weight: bold;
-    }
-    .cavity-text p {
-      font-size: 18px;
-      margin-top: 10px;
-      color: #222;
-    }
-    .cavity-img img {
-      width: 350px;
-      border-radius: 12px;
-      margin: 20px;
-    }
-    .footer-quote {
-      margin-top: 20px;
-      padding: 15px;
-      font-size: 19px;
-      color: #333;
-      background: #cce7f3; 
-    }
-    
-    #faqs {
-      text-align: left;
-      padding: 40px;
-    }
-    #faqs h2 {
-      font-size: 20px;
-      font-weight: bold;
-      border-bottom: 2px solid #007bff;
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-    #faqs ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    #faqs li {
-      margin: 8px 0;
-    }
-    #faqs a {
-      text-decoration: none;
-      color: #333;
-      font-size: 14px;
-    }
-    #faqs a:hover {
-      color: #007bff;
-    }
+/* Headings, nav, and buttons use Poppins */
+h1, h2, h3, nav a, .buttons a {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: black;
+}
+
+/* Navigation */
+nav a {
+  margin: 0 12px;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+}
+nav a:hover {
+  color: #4faeff;
+  text-decoration: underline;
+}
+nav a.active {
+  color: #4faeff;
+}
+
+/* Hero section */
+.home img {
+  width: 100%;
+  height: 250px;
+  display: block;
+  object-fit: cover;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: 30px 20px;
+  opacity: 0;
+  animation: fadeInUp 1.2s ease forwards;
+}
+
+.content-inner {
+  max-width: 700px;
+}
+
+/* Heading animation */
+.content h2 {
+  margin-bottom: 15px;
+  font-size: 32px;
+  font-weight: 600;
+  color: #007bff;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideDown 1s ease forwards;
+  animation-delay: 0.3s;
+}
+
+/* Paragraph animation */
+.content p {
+  max-width: 600px;
+  margin: 0 auto 25px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 0.6s;
+}
+
+/* Button animation */
+.buttons a {
+  display: inline-block;
+  margin: 5px;
+  padding: 12px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  color: white;
+  background: linear-gradient(45deg, #007bff, #00c6ff);
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add shine effect layer */
+.buttons a::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+/* Hover animation */
+.buttons a:hover::after {
+  left: 130%;
+}
+.buttons a:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #0056b3, #0094cc);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+
+/* Cavity section */
+.cavity-section {
+  padding: 60px 20px;
+  background-color: #cce7f3;
+}
+.cavity-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.cavity-text {
+  max-width: 500px;
+  text-align: left;
+  animation: slideInLeft 1.2s ease;
+}
+.cavity-text h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: black;
+}
+.cavity-text p {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #222;
+  line-height: 1.6;
+}
+.cavity-img img {
+  width: 350px;
+  border-radius: 12px;
+  animation: fadeInUp 1.5s ease;
+}
+.footer-quote {
+  display: flex;
+  margin-top: 20px;
+  padding: 15px;
+  font-size: 19px;
+  color: #333;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 1.2s; /* comes in after buttons */
+}
+
+/* FAQs */
+#faqs {
+  text-align: left;
+  padding: 50px 20px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1.2s ease forwards;
+  animation-delay: 1.5s; /* appears last */
+}
+
+#faqs h2 {
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 2px solid #007bff;
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #007bff;
+  opacity: 0;
+  transform: translateX(-30px);
+  animation: slideInLeft 1s ease forwards;
+  animation-delay: 1.7s;
+}
+
+#faqs ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#faqs li {
+  margin: 8px 0;
+  opacity: 0;
+  transform: translateX(20px);
+  animation: fadeInRight 0.8s ease forwards;
+}
+
+/* Each list item comes one by one */
+#faqs li:nth-child(1) { animation-delay: 1.9s; }
+#faqs li:nth-child(2) { animation-delay: 2.1s; }
+#faqs li:nth-child(3) { animation-delay: 2.3s; }
+#faqs li:nth-child(4) { animation-delay: 2.5s; }
+#faqs li:nth-child(5) { animation-delay: 2.7s; }
+
+#faqs a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+#faqs a:hover {
+  color: #007bff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1.05); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
   </style>
 </head>
 <body>
    <header>
-  <div class="header-left">
-    <h1>TootHack</h1>
-  </div>
-  {% include 'sidebar.html' %}
-</header>
+    <div class="header-left">
+      <h1>TootHack</h1>
+    </div>
+    {% include 'sidebar.html' %}
+  </header>
 
   <section class="home" id="home">
     <img src="{{ url_for('static', filename='images/bg.jpg') }}" alt="Dental X-Ray">
   </section>
 
   <section class="content">
+  <div class="content-inner">
     <h2>Welcome to TootHack</h2>
     <p>Your trusted partner in smarter dental care. Upload your dental x-ray, get instant AI-powered analysis, and take the first step toward a healthier smile.</p>
     <div class="buttons">
-      <a href="{{ url_for('main.upload') }}">Upload X-Ray Image</a>
-      <a href="#learn">Learn More</a>
+      <a href="{{ url_for('main.result') }}">Upload X-Ray Image</a>
+      <a href="{{ url_for('main.howitworks') }}">Learn More</a>
     </div>
-  </section>
+  </div>
+</section>
 
 
   <section class="cavity-section" id="cavity-section">
@@ -181,7 +334,6 @@
     </div>
   </section>
 
- 
   <section id="faqs">
     <h2>Need help?</h2>
     <ul>
