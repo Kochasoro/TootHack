@@ -20,8 +20,8 @@
             padding: 0;
             color: black;
             background: #fff;
-            margin-left:4%;
             font-family: 'Roboto', sans-serif;
+            margin-left: 240px;
         }
 
          h1, h2, h3, h4 {
@@ -38,18 +38,20 @@
             margin: 40px 0;
         }
         
-        h2 {
-            color: black;
+        section h2 {
+            color: #007bff;
             margin-bottom: 10px;
-            font-size: 35px;
+            font-size: 45px;
+            font-weight: bold;
         }
 
-        h3{
+         h3{
+            margin-top: 20px;
             font-size: 30px;
         }
         
-        p {
-            color: black;
+        section p {
+            color: #007bff;
             margin-bottom: 15px;
             font-size: 20px;
         }
@@ -433,9 +435,9 @@
         }
         
         /* Header */
-        header {
+        header.page-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start; 
             align-items: center;
             padding: 15px 30px;
             background-color: #fff;
@@ -444,34 +446,65 @@
             top: 0;
             z-index: 1000;
         }
-        
-        header h1 {
-            margin: 0;
+
+        header.page-header h1 {
+            margin-left: 60px; 
+            margin-top: 0;
+            margin-bottom: 0;
             font-size: 22px;
+            color: black; 
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
         }
 
 
+        .content {
+            margin-left: 60px;
+            padding: 5px;
+        }
+
+        h2.upload-title {
+            margin-top: 40px;
+            margin-bottom: 5px;
+            font-size: 27px;
+            
+        }
+
+        #fileInput {
+            margin: 15px 0 70px 0; 
+        }
+
+        h3.result-title {
+            margin-bottom: 15px;
+            color: #007bff; 
+            font-weight: bold;
+        }
 
 
     </style>
 </head>
 <body>
     <!-- Header -->
-    <aside >
-        <div class="header-left">
-            <h1>TootHack</h1>
-        </div>
+    <header class="page-header">
+        <h1>TootHack</h1>
+    </header>
+
+    <!-- Sidebar -->
+    <aside>
         {% include 'sidebar.html' %}
     </aside>
+
+    <div class="content">
     <!-- Page Title -->
     <section>
         <h2>AI Analysis Results</h2>
         <p>Below is a summary of the detected issues from your AI analysis</p>
     </section>
     
-    <h2>Upload Dental X-ray</h2>
+    <h2 class="upload-title">Upload Dental X-ray</h2>
     <input type="file" id="fileInput">
-    <h3>Result:</h3>
+    <h3 class="result-title">Result:</h3>
+
     
     <!-- Tabs -->
     <div class="tabs">
@@ -510,8 +543,6 @@
             <pre id="jsonOutput"></pre>
 
         </div>
-        <pre id="jsonOutput"></pre>
-</div>
 
     </main>
 
@@ -530,7 +561,7 @@
     <div class="footer-btn">
         <button>⬇ Download Report</button>
     </div>
-
+</div>
     <script>
     const tabs = document.querySelectorAll(".tabs button");
     const sections = document.querySelectorAll("main");
@@ -840,6 +871,11 @@
             filterBtn.style.border = "none";
             filterBtn.style.borderRadius = "4px";
             filterBtn.style.cursor = "pointer";
+
+            // Set default background color
+            filterBtn.style.backgroundColor = getDiseaseColor(className);
+            filterBtn.style.color = (getDiseaseColor(className) === "#ecf0f1") ? "black" : "white";
+
             
             filterBtn.addEventListener("click", () => {
                 document.querySelectorAll(".class-filter-btn").forEach(btn => {
@@ -862,6 +898,19 @@
             filterControls.appendChild(filterBtn);
         });
     }
+
+
+     // Helper function to get color based on disease
+        function getDiseaseColor(className) {
+            switch(className.toLowerCase()) {
+                case "filling": return "#ff69b4"; // pink
+                case "root canal treatment": return "#8a2be2"; // violet
+                case "missing teeth": return "#a52a2a"; // brown
+                case "crown": return "#28a745"; // green
+                default: return "#ecf0f1"; // gray for unknown
+            }
+        }
+
 
     function renderDetectionCards(detections) {
         const container = document.getElementById("detectionsContainer");
@@ -889,6 +938,7 @@
             card.style.cursor = "pointer";
             card.style.transition = "all 0.3s ease";
             card.dataset.detectionId = detection.id;
+
 
             card.innerHTML = `
                 <h4>${detection.class}</h4>
