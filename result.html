@@ -4,56 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dental X-ray Analysis</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', 'Roboto', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            color: black;
+            color: #222;
             background: #fff;
             margin-left:4%;
-            font-family: 'Roboto', sans-serif;
         }
-
-         h1, h2, h3, h4 {
-          font-family: 'Poppins', sans-serif;
-          color: #007bff; 
-      }
-
-        p, li {
-          font-family: 'Roboto', sans-serif;
-          color: #007bff; 
-      }
-        .main{
-            margin-left:5%;
-        }
+        
         section {
-            margin: 40px 0;
+            margin-bottom: 30px;
         }
         
         h2 {
-            color: black;
+            color: #2c3e50;
             margin-bottom: 10px;
-            font-size: 35px;
-        }
-
-        h3{
-            font-size: 30px;
+            font-size: 28px;
         }
         
         p {
-            color: black;
-            margin-bottom: 15px;
-            font-size: 20px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
         }
         
         input[type="file"] {
@@ -79,22 +59,17 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            color: black;
+            color: #7f8c8d;
             transition: all 0.3s;
         }
         
         .tabs button.active {
-            color: black;
-            border-bottom: 3px solid #007bff;
+            color: #2980b9;
+            border-bottom: 3px solid #2980b9;
         }
         
         .tabs button:hover {
-            background-color: #007bff; 
-            color: white; 
-            border-radius: 5px; 
-        }
-        #recommendation{
-            margin-left:5%;
+            color: #2980b9;
         }
         
         /* Main Content */
@@ -116,44 +91,37 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             position: relative;
-            border-left: 5px solid #3498db; 
-            transition: all 0.3s ease;
         }
-
-        .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2); 
-            transform: translateY(-3px);
-        }
-
+        
         .card h3 {
-            color: #007bff; 
+            color: #2c3e50;
             margin-bottom: 15px;
             font-size: 20px;
-            border-bottom: 2px solid #3498db; 
+            border-bottom: 2px solid #eee;
             padding-bottom: 10px;
         }
-
+        
         .card p {
             color: #34495e;
             margin-bottom: 15px;
         }
-
+        
         .card ul {
             padding-left: 20px;
             margin-bottom: 15px;
         }
-
+        
         .card li {
             margin-bottom: 10px;
-            color: #000; 
+            color: #34495e;
         }
-
+        
         /* Badges */
         .badge {
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: #3498db; 
+            background-color: #e74c3c;
             color: white;
             border-radius: 50%;
             width: 30px;
@@ -163,23 +131,21 @@
             justify-content: center;
             font-weight: bold;
         }
-
+        
         /* Buttons */
         button {
             padding: 10px 15px;
-            background-color: #3498db; 
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s;
         }
-
+        
         button:hover {
-            background-color: #2980b9; 
-            transform: scale(1.05); 
+            background-color: #2980b9;
         }
-
         
         #retakeBtn {
             background-color: #7f8c8d;
@@ -206,32 +172,24 @@
             overflow-x: auto;
             margin-top: 15px;
             font-size: 14px;
-            border-left: 4px solid #3498db;
-            color: #2c3e50;
             display: none;
         }
-
+        
         /* Footer Button */
         .footer-btn {
             margin-top: 30px;
             text-align: center;
         }
-
+        
         .footer-btn button {
             padding: 12px 24px;
             font-size: 16px;
-            background-color: #3498db; 
-            border-radius: 8px;
-            border: none;
-            color: white;
-            transition: background-color 0.3s, transform 0.2s;
+            background-color: #2c3e50;
         }
-
+        
         .footer-btn button:hover {
-            background-color: #2980b9; 
-            transform: scale(1.05);
+            background-color: #34495e;
         }
-
         #detectionsContainer {
             max-height: 700px; /* Adjust this value as needed */
             overflow-y: auto;
@@ -262,45 +220,34 @@
             scrollbar-width: thin;
             scrollbar-color: #c1c1c1 #f1f1f1;
         }
-
         /* Detection cards */
         .detection-card {
             background: white;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-            padding: 18px;
-            margin-bottom: 20px;
-            border-left: 5px solid #3498db; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
             position: relative;
-            transition: all 0.3s ease;
-            cursor: pointer;
         }
-
-        .detection-card:hover {
-            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
-            transform: translateY(-3px);
-        }
-
+        
         .detection-card h4 {
-            color: #007bff;
-            margin-bottom: 10px;
+            color: #2c3e50;
+            margin-bottom: 8px;
         }
-
+        
         .detection-card p {
             margin-bottom: 8px;
-            color: #000; 
+            color: #34495e;
         }
-
+        
         .confidence {
             display: inline-block;
-            padding: 4px 10px;
-            background-color: #ecf6ff; 
+            padding: 3px 8px;
+            background-color: #ecf0f1;
             border-radius: 12px;
             font-size: 12px;
-            color: #007bff;
-            font-weight: 500;
+            color: #7f8c8d;
         }
-      
         .types {
             display: inline-block;
             padding: 3px 8px;
@@ -317,51 +264,52 @@
         .types[data-type="Anatomy"] { background-color: #27ae60; }
         .types[data-type="Previous Dental Work"] { background-color: #3498db; }
         .types[data-type="Unknown"] { background-color: #95a5a6; }
-
         /* Canvas Container */
         #resultContainer {
             position: relative;
             display: inline-block;
         }
-
+        
         #resultContainer canvas {
             max-width: 100%;
             height: auto;
-            border: 2px solid #3498db; 
+            border: 1px solid #ddd;
             border-radius: 8px;
-            position: relative;
         }
-
+        
         /* Filter buttons */
         .filter-btn, .class-filter-btn {
             transition: all 0.3s ease;
-            border-radius: 5px;
-            padding: 8px 14px;
-            background-color: white;
-            color: #000;
         }
-
+        
         .filter-btn.active, .class-filter-btn.active {
-            background-color: #007bff !important;
+            background-color: #2c3e50 !important;
             color: white;
         }
-
-        /* Focus button */
+        
+        .detection-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .detection-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+            transform: translateY(-2px);
+        }
+        
         .focus-btn {
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 4px;
-            padding: 6px 12px;
+            padding: 5px 10px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s;
         }
-
+        
         .focus-btn:hover {
             background-color: #2980b9;
-            transform: scale(1.05);
         }
-
         .detection-counter {
     margin-top: 20px;
     padding: 15px;
@@ -403,7 +351,6 @@
     font-size: 14px;
     font-weight: 600;
 }
-
         /* Responsive */
         @media (max-width: 768px) {
             main {
@@ -453,246 +400,79 @@
             margin: 0;
             font-size: 22px;
         }
-
-
-
-
     </style>
 </head>
 <body>
     <!-- Header -->
     <aside >
-        {% include 'sidebar.html' %}
-    </aside>
-<div class="main"><!-- Page Title -->
-      <div class="header-left">
+        <div class="header-left">
             <h1>TootHack</h1>
         </div>
-        <section>
-            <h2>AI Analysis Results</h2>
-            <p>Below is a summary of the detected issues from your AI analysis</p>
-        </section>
-        
-        <h2>Upload Dental X-ray</h2>
-        <input type="file" id="fileInput">
-        <h3>Result:</h3>
-        <div style="margin: 10px 0;">
-    <label for="drawMode">Display Mode: </label>
-    <select id="drawMode">
-        <option value="shapes">Draw Shapes (BBox + Mask, No Labels)</option>
-        <option value="labels" selected>Draw Labels (BBox + Mask + Labels)</option>
-        <option value="blacken">Blacken Mask</option>
-        <option value="bbox">BBox Only</option>
-        <option value="mask">Mask Only</option>
-    </select>
-</div>
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="active" data-tab="overview">Overview</button>
-            <button data-tab="recommendation">Recommendation</button>
-        </div>
-
-        <!-- Main Content: Overview -->
-        <main id="overview" class="active">
-            <!-- Left Cards - Will be populated by JavaScript -->
-            <div id="detectionsContainer">
-                <!-- Detection cards will be inserted here -->
-                <div class="card">
-                    <h3>Analysis Results</h3>
-                    <p>Upload an X-ray to see detection results</p>
-                </div>
-            </div>
-
-            <!-- Right Image -->
-
-                <div class="card">
-                <h3>Visual Feedback</h3>
-                <div id="resultContainer">
-                    <img id="resultImg" style="max-width:100%; border:1px solid #ccc; display: none;">
-                    <!-- Canvas will be inserted here dynamically -->
-                </div>
-                
-                <!-- Detection Counter -->
-                <div id="detectionCounter" class="detection-counter" style="display: none;">
-                    <h4>Detection Summary</h4>
-                    <div id="counterItems">
-                        <!-- Counter items will be inserted here -->
-                    </div>
-                </div>
-                
-                <pre id="jsonOutput"></pre>
-
-            </div>
-            <pre id="jsonOutput"></pre>
+        {% include 'sidebar.html' %}
+    </aside>
+    <!-- Page Title -->
+    <section>
+        <h2>AI Analysis Results</h2>
+        <p>Below is a summary of the detected issues from your AI analysis</p>
+    </section>
+    
+    <h2>Upload Dental X-ray</h2>
+    <input type="file" id="fileInput">
+    <h3>Result:</h3>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="active" data-tab="overview">Overview</button>
+        <button data-tab="recommendation">Recommendation</button>
     </div>
 
-        </main>
-
-        <!-- Main Content: Recommendation -->
-        <main id="recommendation">
+    <!-- Main Content: Overview -->
+    <main id="overview" class="active">
+        <!-- Left Cards - Will be populated by JavaScript -->
+        <div id="detectionsContainer">
+            <!-- Detection cards will be inserted here -->
             <div class="card">
-                
+                <h3>Analysis Results</h3>
+                <p>Upload an X-ray to see detection results</p>
+            </div>
+        </div>
 
-                <!-- 🟢 Added container for clinic cards inside the Recommendations card -->
-                <div id="clinicsList" class="clinic-container">
-                <p>Searching for nearby dental clinics...</p>
+        <!-- Right Image -->
+              <div class="card">
+            <h3>Visual Feedback</h3>
+            <div id="resultContainer">
+                <img id="resultImg" style="max-width:100%; border:1px solid #ccc; display: none;">
+                <!-- Canvas will be inserted here dynamically -->
+            </div>
+            
+            <!-- Detection Counter -->
+            <div id="detectionCounter" class="detection-counter" style="display: none;">
+                <h4>Detection Summary</h4>
+                <div id="counterItems">
+                    <!-- Counter items will be inserted here -->
                 </div>
             </div>
-            <div class="card visual">
-                <h3>Nearby Dental Clinics</h3>
-                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbaKFrbQ3WRCKxOyLD8hC28MZZyhMX4S4&libraries=places"></script>
-                   <div id="map"></div>
-  <style>
-    #map { height: 100vh; width: 100%; }
-    
-   .clinic-container {
-    max-height: 700px;  /* Adjust height as needed */
-    overflow-y: auto;
-      overflow-x: hidden;    
-    padding-right: 5px;
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .clinic-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    padding: 10px 15px;
-    width: 100%;
-    transition: transform 0.2s ease;
-    cursor: pointer;
-  }
+            
+            <pre id="jsonOutput"></pre>
+        </div>
+    </main>
 
-  .clinic-card:hover {
-    transform: scale(1.03);
-    background: #f8faff;
-  }
-
-  .clinic-card h4 {
-    margin: 0;
-    color: #007bff;
-  }
-
-  .clinic-card p {
-    margin: 3px 0;
-    font-size: 14px;
-    color: #444;
-  }
-
-  @media (max-width: 768px) {
-    .clinic-card {
-      width: 100%;
-    }
-  }
-  </style>
+    <!-- Main Content: Recommendation -->
+    <main id="recommendation">
+        <div class="card">
+            <h3>Recommendations:</h3>
+            <div id="recommendationsList">
+                <p>Upload an X-ray to get personalized recommendations</p>
             </div>
-        </main>
-            <script>
-    let map;
-  let infoWindow;
-
-  function initMap() {
-    const defaultLocation = { lat: 14.5995, lng: 120.9842 };
-
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: defaultLocation,
-      zoom: 14,
-    });
-
-    infoWindow = new google.maps.InfoWindow();
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const userLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-
-        map.setCenter(userLocation);
-
-        new google.maps.Marker({
-          position: userLocation,
-          map,
-          title: "You are here",
-          icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-        });
-
-        const service = new google.maps.places.PlacesService(map);
-        service.nearbySearch(
-          {
-            location: userLocation,
-            radius: 5000,
-            type: "health",
-            keyword: "dental",
-          },
-          (results, status) => {
-            const clinicContainer = document.getElementById("clinicsList");
-            clinicContainer.innerHTML = ""; // Clear the “Searching...” message
-
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              results.forEach(place => {
-                createMarker(place);
-                addClinicCard(place); // 🟢 Add cards to Recommendations section
-              });
-            } else {
-              clinicContainer.innerHTML = "<p>No clinics found nearby.</p>";
-            }
-          }
-        );
-      });
-    }
-  }
-
-  function createMarker(place) {
-    if (!place.geometry || !place.geometry.location) return;
-
-    const marker = new google.maps.Marker({
-      map,
-      position: place.geometry.location,
-      title: place.name,
-    });
-
-    google.maps.event.addListener(marker, "click", () => {
-      const content = `
-        <div>
-          <h3>${place.name}</h3>
-          <p><b>Address:</b> ${place.vicinity || "Not available"}</p>
-          <p><b>Rating:</b> ${place.rating || "N/A"} ⭐</p>
+            <img src="{{ url_for('static', filename='images/map.jpg') }}" alt="Map" style="width:100%; border-radius:10px; margin-top:10px; display: none;">
         </div>
-      `;
-      infoWindow.setContent(content);
-      infoWindow.open(map, marker);
-    });
-  }
+    </main>
 
-  function addClinicCard(place) {
-    const clinicContainer = document.getElementById("clinicsList");
-    const card = document.createElement("div");
-    card.className = "clinic-card";
-    card.innerHTML = `
-      <h4>${place.name}</h4>
-      <p><b>Address:</b> ${place.vicinity || "Not available"}</p>
-      <p><b>Rating:</b> ${place.rating || "N/A"} ⭐</p>
-    `;
+    <!-- Footer Button -->
+    <div class="footer-btn">
+        <button>⬇ Download Report</button>
+    </div>
 
-    card.addEventListener("click", () => {
-      map.setCenter(place.geometry.location);
-      map.setZoom(16);
-    });
-
-    clinicContainer.appendChild(card);
-  }
-    window.onload = initMap;
-  </script>
-        
-
-        <!-- Footer Button -->
-        <div class="footer-btn">
-            <button>⬇ Download Report</button>
-        </div>
-</div>
     <script>
     const tabs = document.querySelectorAll(".tabs button");
     const sections = document.querySelectorAll("main");
@@ -706,7 +486,6 @@
     let canvas = null;
     let ctx = null;
     let detectionOverlays = [];
-    let drawMode = "labels";
 
     //detection counter
     function updateDetectionCounter(detections) {
@@ -784,123 +563,94 @@
                 drawDetection(overlay);
             }
         });
-
     }
-    document.getElementById("drawMode").addEventListener("change", (e) => {
-    drawMode = e.target.value;
 
-    // Redraw immediately with current filter/selection
-    if (selectedDetections.size > 0) {
-        filterImage(Array.from(selectedDetections));
-    } else if (activeFilter) {
-        const filteredDetections = currentDetections.filter(d => d.class === activeFilter);
-        filterImage(filteredDetections.map(d => d.id));
-    } else {
-        filterImage(null); // redraw everything
-    }
-});
     function drawDetection(detection) {
-    const { bbox, class: className, confidence, color, mask } = detection;
+        const { bbox, class: className, confidence, color, mask } = detection;
+        
+        // Scale factors
+        const scaleX = canvas.width / originalImage.width;
+        const scaleY = canvas.height / originalImage.height;
 
-    const scaleX = canvas.width / originalImage.width;
-    const scaleY = canvas.height / originalImage.height;
+        const [x1, y1, x2, y2] = [
+            bbox[0] * scaleX,
+            bbox[1] * scaleY,
+            bbox[2] * scaleX,
+            bbox[3] * scaleY
+        ];
 
-    const [x1, y1, x2, y2] = [
-        bbox[0] * scaleX,
-        bbox[1] * scaleY,
-        bbox[2] * scaleX,
-        bbox[3] * scaleY
-    ];
-
-    let bboxColor = '#ff0000';
-    let rgbColor = [255, 0, 0];
-    if (Array.isArray(color)) {
-        bboxColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-        rgbColor = color;
-    }
-
-    // Handle mask drawing first
-    if (mask && (drawMode !== "bbox")) {   // skip mask if mode is BBox only
-        const maskImg = new Image();
-        maskImg.onload = function() {
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = maskImg.width;
-            tempCanvas.height = maskImg.height;
-            tempCtx.drawImage(maskImg, 0, 0);
-
-            const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-            const data = imageData.data;
-
-            for (let i = 0; i < data.length; i += 4) {
-                if (data[i + 3] > 0) {
-                    if (drawMode === "blacken") {
-                        data[i]   = 0;   // R
-                        data[i+1] = 0;   // G
-                        data[i+2] = 0;   // B
-                        data[i+3] = 255; // Alpha (0 = transparent, 255 = fully opaque)
-                    } else {
-                        data[i] = rgbColor[0];
-                        data[i+1] = rgbColor[1];
-                        data[i+2] = rgbColor[2];
-                    }
-                }
-            }
-
-            tempCtx.putImageData(imageData, 0, 0);
-
-            // For blacken, draw solid (no opacity)
-            if (drawMode === "blacken") {
-                ctx.globalAlpha = 1.0;
-            } else {
-                ctx.globalAlpha = 0.9; // semi-transparent for colored masks
-            }
-
-            ctx.drawImage(
-                tempCanvas,
-                bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1],
-                x1, y1, x2 - x1, y2 - y1
-            );
-
-            ctx.globalAlpha = 1.0;
-
-            // Draw BBox if NOT in mask-only mode
-            if (drawMode !== "blacken" && drawMode !== "mask") {
-                ctx.strokeStyle = bboxColor;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(x1, y1, x2-x1, y2-y1);
-            }
-
-            // Draw label only if mode = labels
-            if (drawMode === "labels") {
-                ctx.fillStyle = bboxColor.replace(')', ', 0.7)').replace('rgb', 'rgba');
-                ctx.fillRect(x1, y1 - 20, 150, 20);
-
-                ctx.fillStyle = 'white';
-                ctx.font = '14px Arial';
-                ctx.fillText(`${className}: ${(confidence * 100).toFixed(1)}%`, x1+5, y1-5);
-            }
-        };
-        maskImg.src = "data:image/png;base64," + mask;
-    } else {
-        // if NO mask available or BBox-only mode
-        if (drawMode !== "mask") {
-            ctx.strokeStyle = bboxColor;
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x1, y1, x2-x1, y2-y1);
-
-            if (drawMode === "labels") {
-                ctx.fillStyle = bboxColor.replace(')', ', 0.7)').replace('rgb', 'rgba');
-                ctx.fillRect(x1, y1 - 20, 150, 20);
-
-                ctx.fillStyle = 'white';
-                ctx.font = '14px Arial';
-                ctx.fillText(`${className}: ${(confidence * 100).toFixed(1)}%`, x1+5, y1-5);
+        let bboxColor = '#ff0000'; // default
+        let rgbColor = [255, 0, 0]; // default RGB values
+        
+        if (Array.isArray(color)) {
+            bboxColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            rgbColor = color;
+        } else if (typeof color === 'string') {
+            bboxColor = color;
+            if (color.startsWith('#')) {
+                const hex = color.replace('#', '');
+                rgbColor = [
+                    parseInt(hex.substring(0, 2), 16),
+                    parseInt(hex.substring(2, 4), 16),
+                    parseInt(hex.substring(4, 6), 16)
+                ];
             }
         }
-    }
-}
 
+        if (mask) {
+            const maskImg = new Image();
+            maskImg.onload = function() {
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                tempCanvas.width = maskImg.width;
+                tempCanvas.height = maskImg.height;
+                
+                tempCtx.drawImage(maskImg, 0, 0);
+                
+                const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                const data = imageData.data;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    if (data[i + 3] > 0) {
+                        data[i] = rgbColor[0];
+                        data[i + 1] = rgbColor[1];
+                        data[i + 2] = rgbColor[2];
+                    }
+                }
+                
+                tempCtx.putImageData(imageData, 0, 0);
+                ctx.globalAlpha = 0.8;
+                ctx.drawImage(
+                    tempCanvas, 
+                    bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1],
+                    x1, y1, x2 - x1, y2 - y1
+                );
+                ctx.globalAlpha = 1.0;
+                ctx.strokeStyle = bboxColor;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                ctx.fillStyle = bboxColor.replace(')', ', 0.7)').replace('rgb', 'rgba');
+                ctx.fillRect(x1, y1 - 20, 150, 20);
+                ctx.fillStyle = 'white';
+                ctx.font = '14px Arial';
+                ctx.fillText(`${className}: ${(confidence * 100).toFixed(1)}%`, x1 + 5, y1 - 5);
+            };
+            maskImg.src = "data:image/png;base64," + mask;
+        } else {
+            // Fallback if no mask
+            ctx.strokeStyle = bboxColor;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+
+            ctx.fillStyle = bboxColor.replace(')', ', 0.7)').replace('rgb', 'rgba');
+            ctx.fillRect(x1, y1 - 20, 150, 20);
+
+            ctx.fillStyle = 'white';
+            ctx.font = '14px Arial';
+            ctx.fillText(`${className}: ${(confidence * 100).toFixed(1)}%`, x1 + 5, y1 - 5);
+        }
+    }
 
     function prepareDetectionOverlays(detectionData) {
         return detectionData.map((detection) => {
@@ -966,6 +716,9 @@
             // Update detection counter
             updateDetectionCounter(currentDetections);
             
+            // Update recommendations
+            updateRecommendations(currentDetections);
+            
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred while processing the image: " + error.message);
@@ -986,7 +739,7 @@
             return;
         }
         
-         //filter controls
+        //filter controls
         const filterControls = document.createElement("div");
         filterControls.style.marginBottom = "15px";
         filterControls.innerHTML = `
@@ -1028,10 +781,7 @@
             filterBtn.style.border = "none";
             filterBtn.style.borderRadius = "4px";
             filterBtn.style.cursor = "pointer";
-             // Set default background color
-            filterBtn.style.backgroundColor = getDiseaseColor(className);
-            filterBtn.style.color = (getDiseaseColor(className) === "#ecf0f1") ? "black" : "white";
-
+            
             filterBtn.addEventListener("click", () => {
                 document.querySelectorAll(".class-filter-btn").forEach(btn => {
                     btn.classList.remove("active");
@@ -1053,20 +803,7 @@
             filterControls.appendChild(filterBtn);
         });
     }
-     // Helper function to get color based on disease
-        function getDiseaseColor(className) {
-            switch(className.toLowerCase()) {
-                case "filling": return "#921c56"; // pink
-                case "caries": return "#66ac5d"; // green
-                case "root piece": return "#c28b37"; // orange
-                case "impacted tooth": return "#81bfbb"; // teal
-                case "root canal treatment": return "#360457"; // violet
-                case "missing teeth": return "#584c4f"; // brown
-                 case "periapical lesion": return "#938092"; // pinkidark
-                case "crown": return "#185840"; // green
-                default: return "#ecf0f1"; // gray for unknown
-            }
-        }
+
     function renderDetectionCards(detections) {
         const container = document.getElementById("detectionsContainer");
         

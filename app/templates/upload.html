@@ -1,45 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Cavity Detection</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semantic Web Layout</title>
+<style>
+  body {
+    margin: 0;
+    display: grid;
+    grid-template-columns:60px 200px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "section navbar navbar"
+      "section aside main"
+      "section aside footer";
+    min-height: 100vh;
+  }
+nav{
+  top: 0;
+  grid-area: navbar;
+  position: sticky;
+  background-color: aqua;
+  padding: 0.3em;
+  padding-left: 0.8em;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 22px;
+}
+
+section{
+  grid-area: section;
+  background-color: darkcyan;
+  width: max-content;
+  height: 100vh;
+}
+main{
+  grid-area: main;
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
+  gap: 20px;
+  padding: 20px 100px 20px 100px;
+  box-sizing: border-box;
+}
+main > div {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #D1D5DB;
+}
+aside{
+  position: sticky;
+  top: 46.18px;
+  align-self: end;
+  grid-area: aside;
+  background: white;
+  padding: 15px;
+  height: 100vh;
+  border: 2px solid #D1D5DB;
+}
+footer{
+  grid-area: footer;
+}
+</style>
 </head>
 <body>
-  <h2>Upload Dental X-ray</h2>
-  <input type="file" id="fileInput">
-  <h3>Result:</h3>
-  <img id="resultImg" style="max-width:600px; border:1px solid #ccc;">
-  <pre id="jsonOutput"></pre>
+<nav>TootHack</nav>
+<section><div>{% include 'sidebar.html' %}</div> </section>
+<aside>Sidebar2</aside>
 
-
-
-
-
-
-
-
-
-
-
-  
-  <script>
-  document.getElementById("fileInput").addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("image", file);
-
-    const response = await fetch("/predict", {
-      method: "POST",
-      body: formData
-    });
-
-    const result = await response.json();
-
-    // Show annotated image
-    document.getElementById("resultImg").src = "data:image/jpeg;base64," + result.annotated_image;
-
-    // Show JSON detections
-    document.getElementById("jsonOutput").textContent = JSON.stringify(result.detections, null, 2);
-  });
-  </script>
+<main>
+   <div>
+    <h2>Column 1</h2>
+    <p>Lorem ipsum dolor sit amet...</p>
+  </div>
+  <div>
+    <h2>Column 2</h2>
+    <p>More content here...</p>
+  </div>
+  <div>
+    <h2>Column 3</h2>
+    <p>Even more content...</p>
+  </div>
+</main>
+    <footer>Footer</footer>
 </body>
 </html>
