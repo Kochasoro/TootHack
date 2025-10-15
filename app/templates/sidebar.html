@@ -179,6 +179,27 @@
   crossorigin="anonymous"></script>
 
 <script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("mySidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const miniNav = document.getElementById("miniNav");
+    const body = document.body;
+
+    const isOpen = sidebar.classList.contains("open");
+
+    if (isOpen) {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("open");
+      body.classList.remove("lock-scroll");
+      miniNav.classList.remove("hidden");
+    } else {
+      sidebar.classList.add("open");
+      overlay.classList.add("open");
+      body.classList.add("lock-scroll");
+      miniNav.classList.add("hidden");
+    }
+  }
+
   // Enable Bootstrap tooltips
   document.addEventListener("DOMContentLoaded", () => {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
