@@ -20,8 +20,8 @@
             padding: 0;
             color: black;
             background: #fff;
-            margin-left:4%;
             font-family: 'Roboto', sans-serif;
+            margin-left: 240px;
         }
 
          h1, h2, h3, h4 {
@@ -33,25 +33,25 @@
           font-family: 'Roboto', sans-serif;
           color: #007bff; 
       }
-        .main{
-            margin-left:5%;
-        }
+        
         section {
             margin: 40px 0;
         }
         
-        h2 {
-            color: black;
+        section h2 {
+            color: #007bff;
             margin-bottom: 10px;
-            font-size: 35px;
+            font-size: 45px;
+            font-weight: bold;
         }
 
-        h3{
+         h3{
+            margin-top: 20px;
             font-size: 30px;
         }
         
-        p {
-            color: black;
+        section p {
+            color: #007bff;
             margin-bottom: 15px;
             font-size: 20px;
         }
@@ -93,9 +93,7 @@
             color: white; 
             border-radius: 5px; 
         }
-        #recommendation{
-            margin-left:5%;
-        }
+
         
         /* Main Content */
         main {
@@ -437,9 +435,9 @@
         }
         
         /* Header */
-        header {
+        header.page-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start; 
             align-items: center;
             padding: 15px 30px;
             background-color: #fff;
@@ -448,92 +446,118 @@
             top: 0;
             z-index: 1000;
         }
-        
-        header h1 {
-            margin: 0;
+
+        header.page-header h1 {
+            margin-left: 60px; 
+            margin-top: 0;
+            margin-bottom: 0;
             font-size: 22px;
+            color: black; 
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
         }
 
 
+        .content {
+            margin-left: 60px;
+            padding: 5px;
+        }
+
+        h2.upload-title {
+            margin-top: 40px;
+            margin-bottom: 5px;
+            font-size: 27px;
+            
+        }
+
+        #fileInput {
+            margin: 15px 0 70px 0; 
+        }
+
+        h3.result-title {
+            margin-bottom: 15px;
+            color: #007bff; 
+            font-weight: bold;
+        }
 
 
     </style>
 </head>
 <body>
     <!-- Header -->
-    <aside >
+    <header class="page-header">
+        <h1>TootHack</h1>
+    </header>
+
+    <!-- Sidebar -->
+    <aside>
         {% include 'sidebar.html' %}
     </aside>
-<div class="main"><!-- Page Title -->
-      <div class="header-left">
-            <h1>TootHack</h1>
-        </div>
-        <section>
-            <h2>AI Analysis Results</h2>
-            <p>Below is a summary of the detected issues from your AI analysis</p>
-        </section>
-        
-        <h2>Upload Dental X-ray</h2>
-        <input type="file" id="fileInput">
-        <h3>Result:</h3>
-        <div style="margin: 10px 0;">
+
+    <div class="content">
+    <!-- Page Title -->
+    <section>
+        <h2>AI Analysis Results</h2>
+        <p>Below is a summary of the detected issues from your AI analysis</p>
+    </section>
+    
+    <h2 class="upload-title">Upload Dental X-ray</h2>
+    <input type="file" id="fileInput">
+    <h3 class="result-title">Result:</h3>
+    <div style="margin: 10px 0;">
     <label for="drawMode">Display Mode: </label>
-    <select id="drawMode">
-        <option value="shapes">Draw Shapes (BBox + Mask, No Labels)</option>
-        <option value="labels" selected>Draw Labels (BBox + Mask + Labels)</option>
-        <option value="blacken">Blacken Mask</option>
-        <option value="bbox">BBox Only</option>
-        <option value="mask">Mask Only</option>
-    </select>
-</div>
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="active" data-tab="overview">Overview</button>
-            <button data-tab="recommendation">Recommendation</button>
-        </div>
-
-        <!-- Main Content: Overview -->
-        <main id="overview" class="active">
-            <!-- Left Cards - Will be populated by JavaScript -->
-            <div id="detectionsContainer">
-                <!-- Detection cards will be inserted here -->
-                <div class="card">
-                    <h3>Analysis Results</h3>
-                    <p>Upload an X-ray to see detection results</p>
-                </div>
-            </div>
-
-            <!-- Right Image -->
-
-                <div class="card">
-                <h3>Visual Feedback</h3>
-                <div id="resultContainer">
-                    <img id="resultImg" style="max-width:100%; border:1px solid #ccc; display: none;">
-                    <!-- Canvas will be inserted here dynamically -->
-                </div>
-                
-                <!-- Detection Counter -->
-                <div id="detectionCounter" class="detection-counter" style="display: none;">
-                    <h4>Detection Summary</h4>
-                    <div id="counterItems">
-                        <!-- Counter items will be inserted here -->
-                    </div>
-                </div>
-                
-                <pre id="jsonOutput"></pre>
-
-            </div>
-            <pre id="jsonOutput"></pre>
+        <select id="drawMode">
+            <option value="shapes">Draw Shapes (BBox + Mask, No Labels)</option>
+            <option value="labels" selected>Draw Labels (BBox + Mask + Labels)</option>
+            <option value="blacken">Blacken Mask</option>
+            <option value="bbox">BBox Only</option>
+            <option value="mask">Mask Only</option>
+        </select>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="active" data-tab="overview">Overview</button>
+        <button data-tab="recommendation">Recommendation</button>
     </div>
 
-        </main>
-
-        <!-- Main Content: Recommendation -->
-        <main id="recommendation">
+    <!-- Main Content: Overview -->
+    <main id="overview" class="active">
+        <!-- Left Cards - Will be populated by JavaScript -->
+        <div id="detectionsContainer">
+            <!-- Detection cards will be inserted here -->
             <div class="card">
-                
+                <h3>Analysis Results</h3>
+                <p>Upload an X-ray to see detection results</p>
+            </div>
+        </div>
 
-                <!-- 🟢 Added container for clinic cards inside the Recommendations card -->
+        <!-- Right Image -->
+
+              <div class="card">
+            <h3>Visual Feedback</h3>
+            <div id="resultContainer">
+                <img id="resultImg" style="max-width:100%; border:1px solid #ccc; display: none;">
+                <!-- Canvas will be inserted here dynamically -->
+            </div>
+            
+            <!-- Detection Counter -->
+            <div id="detectionCounter" class="detection-counter" style="display: none;">
+                <h4>Detection Summary</h4>
+                <div id="counterItems">
+                    <!-- Counter items will be inserted here -->
+                </div>
+            </div>
+            
+            <pre id="jsonOutput"></pre>
+
+        </div>
+
+    </main>
+
+    <!-- Main Content: Recommendation -->
+     <main id="recommendation">
+            <div class="card">
                 <div id="clinicsList" class="clinic-container">
                 <p>Searching for nearby dental clinics...</p>
                 </div>
@@ -542,7 +566,7 @@
                 <h3>Nearby Dental Clinics</h3>
                  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbaKFrbQ3WRCKxOyLD8hC28MZZyhMX4S4&libraries=places"></script>
                    <div id="map"></div>
-  <style>
+        <style>
     #map { height: 100vh; width: 100%; }
     
    .clinic-container {
@@ -587,9 +611,9 @@
     }
   }
   </style>
-            </div>
-        </main>
-            <script>
+        </div>
+    </main>
+    <script>
     let map;
   let infoWindow;
 
@@ -629,12 +653,12 @@
           },
           (results, status) => {
             const clinicContainer = document.getElementById("clinicsList");
-            clinicContainer.innerHTML = ""; // Clear the “Searching...” message
+            clinicContainer.innerHTML = "";
 
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               results.forEach(place => {
                 createMarker(place);
-                addClinicCard(place); // 🟢 Add cards to Recommendations section
+                addClinicCard(place);
               });
             } else {
               clinicContainer.innerHTML = "<p>No clinics found nearby.</p>";
@@ -686,12 +710,10 @@
   }
     window.onload = initMap;
   </script>
-        
-
-        <!-- Footer Button -->
-        <div class="footer-btn">
-            <button>⬇ Download Report</button>
-        </div>
+    <!-- Footer Button -->
+    <div class="footer-btn">
+        <button>⬇ Download Report</button>
+    </div>
 </div>
     <script>
     const tabs = document.querySelectorAll(".tabs button");
@@ -919,58 +941,78 @@
     function filterImage(selectedIds) {
         drawImageWithFilter(selectedIds);
     }
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    document.getElementById("fileInput").addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+    // ✅ Resize before upload
+    const resizedFile = await resizeImage(file, 800, 800); // target max width/height
+
+    const formData = new FormData();
+    formData.append("image", resizedFile, file.name);
+
+    try {
+        const response = await fetch("/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
         
-        const formData = new FormData();
-        formData.append("image", file);
-
-        try {
-            const response = await fetch("/predict", {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await response.json();
-            
-            if (result.error) {
-                throw new Error(result.error);
-            }
-            
-            currentDetections = result.detections;
-            currentImageData = result.annotated_image;
-            currentDetectionData = result.detection_data || [];
-            originalImageData = result.original_image;
-            
-            await initializeCanvas();
-            
-            // Load original image
-            originalImage = new Image();
-            originalImage.onload = function() {
-                canvas.width = originalImage.width;
-                canvas.height = originalImage.height;
-                
-                // Prepare detection overlays
-                detectionOverlays = prepareDetectionOverlays(currentDetectionData);
-                
-                // Draw image with all detections
-                drawImageWithFilter();
-            };
-            originalImage.src = "data:image/jpeg;base64," + originalImageData;
-            
-            // Update the detection cards
-            updateDetectionCards(currentDetections);
-            
-            // Update detection counter
-            updateDetectionCounter(currentDetections);
-            
-        } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred while processing the image: " + error.message);
+        if (result.error) {
+            throw new Error(result.error);
         }
+
+        currentDetections = result.detections;
+        currentImageData = result.annotated_image;
+        currentDetectionData = result.detection_data || [];
+        originalImageData = result.original_image;
+
+        await initializeCanvas();
+
+        originalImage = new Image();
+        originalImage.onload = function() {
+            canvas.width = originalImage.width;
+            canvas.height = originalImage.height;
+            detectionOverlays = prepareDetectionOverlays(currentDetectionData);
+            drawImageWithFilter();
+        };
+        originalImage.src = "data:image/jpeg;base64," + originalImageData;
+
+        updateDetectionCards(currentDetections);
+        updateDetectionCounter(currentDetections);
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while processing the image: " + error.message);
+    }
+});
+
+// 🪄 Helper function to resize image using canvas
+async function resizeImage(file, maxWidth, maxHeight) {
+    const img = await createImageBitmap(file);
+    let { width, height } = img;
+
+    // Maintain aspect ratio
+    const ratio = Math.min(maxWidth / width, maxHeight / height);
+    if (ratio < 1) {
+        width = width * ratio;
+        height = height * ratio;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, width, height);
+
+    // Convert canvas to Blob (JPEG or PNG)
+    return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name, { type: file.type }));
+        }, file.type, 0.9); // 0.9 = quality (for JPEG)
     });
+}
 
     function updateDetectionCards(detections) {
         const container = document.getElementById("detectionsContainer");
@@ -1028,10 +1070,12 @@
             filterBtn.style.border = "none";
             filterBtn.style.borderRadius = "4px";
             filterBtn.style.cursor = "pointer";
-             // Set default background color
+
+            // Set default background color
             filterBtn.style.backgroundColor = getDiseaseColor(className);
             filterBtn.style.color = (getDiseaseColor(className) === "#ecf0f1") ? "black" : "white";
 
+            
             filterBtn.addEventListener("click", () => {
                 document.querySelectorAll(".class-filter-btn").forEach(btn => {
                     btn.classList.remove("active");
@@ -1053,6 +1097,8 @@
             filterControls.appendChild(filterBtn);
         });
     }
+
+
      // Helper function to get color based on disease
         function getDiseaseColor(className) {
             switch(className.toLowerCase()) {
@@ -1062,11 +1108,15 @@
                 case "impacted tooth": return "#81bfbb"; // teal
                 case "root canal treatment": return "#360457"; // violet
                 case "missing teeth": return "#584c4f"; // brown
-                 case "periapical lesion": return "#938092"; // pinkidark
+                case "periapical lesion": return "#938092"; // pinkidark
+                case "bone loss": return "#4128ca"; // magenta
+                case "implant": return "#a1dfe2"; // lblue
                 case "crown": return "#185840"; // green
                 default: return "#ecf0f1"; // gray for unknown
             }
         }
+
+
     function renderDetectionCards(detections) {
         const container = document.getElementById("detectionsContainer");
         
@@ -1093,6 +1143,7 @@
             card.style.cursor = "pointer";
             card.style.transition = "all 0.3s ease";
             card.dataset.detectionId = detection.id;
+
 
             card.innerHTML = `
                 <h4>${detection.class}</h4>

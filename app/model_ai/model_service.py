@@ -70,7 +70,7 @@ np.random.seed(42)
 colors = {i: tuple(np.random.randint(0, 255, 3).tolist()) for i in range(len(class_names))}
 
 ##MODEL_PATH = os.path.join(os.path.dirname(__file__), "maskrcnn_exportedLast.pth")
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "maskrcnn_best.pth")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "maskrcnn_epoch194.pth")
 num_classes = len(class_names) + 1
 ##model = maskrcnn_resnet50_fpn(weights=None, num_classes=num_classes)
 
