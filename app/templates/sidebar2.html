@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clean Sidebar Nav</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Layout container */
+    body {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 60px 200px 1fr;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "mini aside nav"
+        "mini aside main"
+        "mini aside footer";
+      min-height: 100vh;
+      font-family: sans-serif;
+    }
+
+    /* Mini vertical nav (always visible) */
+    .mini-nav {
+      grid-area: mini;
+      background: #fff;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding-top: 12px;
+    }
+    .mini-nav a {
+      color: #007bff;
+      font-size: 22px;
+      text-decoration: none;
+      padding: 12px 0;
+    }
+    .mini-nav a:hover {
+      color: #0056b3;
+    }
+
+    /* Sidebar (full with labels) */
+    aside {
+      grid-area: aside;
+      background: #f8f9fa;
+      padding-top: 60px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
+    aside a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      color: #333;
+      text-decoration: none;
+    }
+    aside a i {
+      color: #007bff;
+    }
+    aside a:hover {
+      background: #eee;
+    }
+
+    nav {
+      grid-area: nav;
+      background: #007bff;
+      color: white;
+      padding: 1rem;
+      font-weight: bold;
+    }
+    main {
+      grid-area: main;
+      padding: 1rem;
+    }
+    footer {
+      grid-area: footer;
+      background: #ddd;
+      padding: 0.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mini Nav -->
+  <div class="mini-nav">
+    <a href="#"><i class="fas fa-home"></i></a>
+    <a href="#"><i class="fas fa-info-circle"></i></a>
+    <a href="#"><i class="fas fa-upload"></i></a>
+  </div>
+
+  <!-- Sidebar -->
+  <aside>
+    <a href="#"><i class="fas fa-home"></i> Home</a>
+    <a href="#"><i class="fas fa-info-circle"></i> How it Works</a>
+    <a href="#"><i class="fas fa-upload"></i> Upload X-Ray</a>
+  </aside>
+
+  <!-- Top nav -->
+  <nav>Navbar</nav>
+
+  <!-- Main content -->
+  <main>
+    <h1>Hello World</h1>
+    <p>Your main content goes here.</p>
+  </main>
+
+  <!-- Footer -->
+  <footer>Footer © 2025</footer>
+</body>
+</html>
