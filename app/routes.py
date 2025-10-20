@@ -11,6 +11,7 @@ def auth():
 # If user logs in, go to index page (TootHack homepage)
 main_bp.add_url_rule("/home", view_func=home.home)
 
+
 # Other pages
 main_bp.add_url_rule("/howitworks", view_func=home.howitworks)
 main_bp.add_url_rule("/upload", view_func=home.upload)
