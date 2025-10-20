@@ -1,10 +1,16 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from app.controllers import home
 
 main_bp = Blueprint("main", __name__)
 
-# Home
-main_bp.add_url_rule("/", view_func=home.home)
+# Show auth page first
+@main_bp.route("/")
+def auth():
+    return render_template("auth.html")
+
+# If user logs in, go to index page (TootHack homepage)
+main_bp.add_url_rule("/home", view_func=home.home)
+
 
 # Other pages
 main_bp.add_url_rule("/howitworks", view_func=home.howitworks)
