@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TootHack | Login & Signup</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+   
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      overflow: hidden;
+    }
+
+    /* ===== Container ===== */
+    .auth-container {
+      position: relative;
+      width: 850px;
+      height: 500px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    /* ===== Forms ===== */
+    .form-container {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 0 40px;
+      transition: all 0.6s ease-in-out;
+    }
+
+    form {
+      width: 100%;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #007bff;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    p {
+      color: #555;
+      font-size: 15px;
+      margin-bottom: 25px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border 0.3s ease;
+    }
+
+    .input-group input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(45deg, #007bff, #00c6ff);
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: skewX(-25deg);
+      transition: left 0.6s ease;
+    }
+
+    .btn:hover::after {
+      left: 130%;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #0056b3, #0094cc);
+    }
+
+    .toggle-panel {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px;
+      transition: all 0.6s ease-in-out;
+      font-family: 'Poppins', sans-serif;
+      z-index: 1;
+    }
+
+    .toggle-panel h3 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .toggle-panel p {
+      font-size: 15px;
+      margin-bottom: 25px;
+      color: #eef;
+    }
+
+    .toggle-btn {
+      background: #fff;
+      color: #007bff;
+      border: none;
+      border-radius: 30px;
+      padding: 10px 25px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.4s ease;
+    }
+
+    .toggle-btn:hover {
+      transform: scale(1.05);
+      background: #f0f0f0;
+    }
+
+    /* ===== Animation Toggle ===== */
+    .auth-container.active .sign-in {
+      transform: translateX(100%);
+      z-index: 1;
+      opacity: 0;
+    }
+
+    .auth-container.active .sign-up {
+      transform: translateX(100%);
+      opacity: 1;
+      z-index: 2;
+    }
+
+    .auth-container.active .toggle-panel {
+      transform: translateX(-100%);
+    }
+
+    .sign-in {
+      left: 0;
+      z-index: 2;
+      opacity: 1;
+    }
+
+    .sign-up {
+      left: 0;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    /* ===== Keyframes ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="auth-container" id="authBox">
+
+    <!-- ===== Login Form ===== -->
+    <div class="form-container sign-in">
+      <form id="loginForm">
+        <h2>Welcome Back</h2>
+        <p>Login to your TootHack account</p>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" placeholder="Enter your password" required>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
+    </div>
+
+    <!-- ===== Signup Form ===== -->
+    <div class="form-container sign-up">
+      <form id="signupForm">
+        <h2>Create Account</h2>
+        <p>Join TootHack for smarter dental care</p>
+
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" placeholder="Enter your name" required>
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" placeholder="Create a password" required>
+        </div>
+
+        <button type="submit" class="btn">Sign Up</button>
+      </form>
+    </div>
+
+    <!-- ===== Sliding Panel ===== -->
+    <div class="toggle-panel" id="togglePanel">
+      <div class="toggle-content">
+        <h3>Hello, Friend!</h3>
+        <p>Don’t have an account yet? Let’s get started and protect your smile.</p>
+        <button class="toggle-btn" id="signUpBtn">Sign Up</button>
+        <h3 style="margin-top: 30px;">Already a Member?</h3>
+        <p>Welcome back! Continue your journey with TootHack.</p>
+        <button class="toggle-btn" id="signInBtn">Login</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const authBox = document.getElementById('authBox');
+    const signUpBtn = document.getElementById('signUpBtn');
+    const signInBtn = document.getElementById('signInBtn');
+
+    signUpBtn.addEventListener('click', () => {
+      authBox.classList.add('active');
+    });
+
+    signInBtn.addEventListener('click', () => {
+      authBox.classList.remove('active');
+    });
+
+    // Redirect to index.html when submitting forms
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      window.location.href = '/home';
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      window.location.href = '/home';
+    });
+  </script>
+
+</body>
+</html>
