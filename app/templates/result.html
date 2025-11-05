@@ -51,7 +51,7 @@
         }
         
         section p {
-            color: #007bff;
+            color: black;
             margin-bottom: 15px;
             font-size: 20px;
         }
@@ -457,6 +457,10 @@
             font-weight: bold;
         }
 
+        .page-header h1 .toot {
+            color: #1a73e8; 
+            }
+
 
         .content {
             margin-left: 60px;
@@ -486,7 +490,7 @@
 <body>
     <!-- Header -->
     <header class="page-header">
-        <h1>TootHack</h1>
+        <h1><span class="toot">Toot</span>Hack</h1>
     </header>
 
     <!-- Sidebar -->
@@ -554,7 +558,10 @@
         </div>
 
     </main>
-
+    <div id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Analyzing X-ray... Please wait</p>
+</div>
     <!-- Main Content: Recommendation -->
      <main id="recommendation">
             <div class="card">
@@ -566,6 +573,37 @@
                 <h3>Nearby Dental Clinics</h3>
                  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbaKFrbQ3WRCKxOyLD8hC28MZZyhMX4S4&libraries=places"></script>
                    <div id="map"></div>
+                   <style>
+                    #loadingOverlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.6);
+                        display: none;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        color: white;
+                        z-index: 9999;
+                        }
+
+                        .spinner {
+                        border: 6px solid rgba(255,255,255,0.3);
+                        border-top: 6px solid #00ffcc;
+                        border-radius: 50%;
+                        width: 50px;
+                        height: 50px;
+                        animation: spin 1s linear infinite;
+                        margin-bottom: 10px;
+                        }
+
+                        @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                        }
+                   </style>
         <style>
     #map { height: 100vh; width: 100%; }
     
@@ -712,9 +750,172 @@
   </script>
     <!-- Footer Button -->
     <div class="footer-btn">
-        <button>⬇ Download Report</button>
+        <button id="printCanvasBtn">⬇ Download Report</button>
     </div>
 </div>
+<script>
+   
+    function printCanvas(canvas) {
+    if (!canvas) {
+        alert("No canvas to print yet!");
+        return;
+    }
+
+    const today = new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const detectionSummaryText = "Detected dental anomalies and caries based on AI model results.";
+
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "none";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(`
+        <html>
+        <head>
+            <title>TootHack Detection Invoice</title>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+            <style>
+                @page {
+                    size: A4;
+                    margin: 1in;
+                }
+                body {
+                    font-family: 'Poppins', sans-serif;
+                    background: #fff;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                }
+                .invoice-container {
+                    width: 100%;
+                    max-width: 800px;
+                    margin: 0 auto;
+                    padding: 20px 40px;
+                    box-sizing: border-box;
+                }
+                .invoice-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 2px solid #1a73e8;
+                    padding-bottom: 10px;
+                    margin-bottom: 25px;
+                }
+                .logo {
+                    font-size: 32px;
+                    font-weight: 600;
+                    color: #1a73e8;
+                }
+                .logo span {
+                    color: #111;
+                }
+                .invoice-title {
+                    text-align: right;
+                    font-weight: 600;
+                    font-size: 20px;
+                    color: #333;
+                }
+                .invoice-info {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 20px;
+                }
+                .invoice-info div {
+                    width: 48%;
+                }
+                .invoice-info p {
+                    margin: 5px 0;
+                    font-size: 15px;
+                }
+                .invoice-body {
+                    margin-bottom: 20px;
+                }
+                img {
+                    display: block;
+                    margin: 20px auto;
+                    max-width: 100%;
+                    border: 1px solid #ddd;
+                    border-radius: 10px;
+                }
+                .summary {
+                    margin-top: 20px;
+                }
+                .summary h3 {
+                    color: #1a73e8;
+                    margin-bottom: 10px;
+                }
+                .summary p {
+                    line-height: 1.6;
+                    text-align: justify;
+                }
+                .invoice-footer {
+                    border-top: 1px solid #ddd;
+                    text-align: center;
+                    font-size: 13px;
+                    color: #555;
+                    padding-top: 10px;
+                    margin-top: 30px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="invoice-container">
+                <div class="invoice-header">
+                    <div class="logo">Toot<span>Hack</span></div>
+                    <div class="invoice-title">Dental Detection Report</div>
+                </div>
+
+                <div class="invoice-info">
+                    <div>
+                        <p><strong>Patient Name:</strong> ____________________</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p><strong>Date:</strong> ${today}</p>
+                        <p><strong>Report No.:</strong> #TH-${Math.floor(Math.random() * 90000 + 10000)}</p>
+                    </div>
+                </div>
+
+                <div class="invoice-body">
+                    <img src="${dataUrl}" alt="Detection Result">
+                    <div class="summary">
+                        <h3>Summary of Detections</h3>
+                        <p>${detectionSummaryText}</p>
+                    </div>
+                </div>
+
+                <div class="invoice-footer">
+                    © 2025 TootHack | Dental Disease Detection System | tootHack.ai
+                </div>
+            </div>
+        </body>
+        </html>
+    `);
+    doc.close();
+
+    iframe.onload = () => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        setTimeout(() => document.body.removeChild(iframe), 1000);
+    };
+}
+
+
+document.getElementById("printCanvasBtn").addEventListener("click", () => {
+    printCanvas(canvas, detectionSummaryText);
+});
+</script>
     <script>
     const tabs = document.querySelectorAll(".tabs button");
     const sections = document.querySelectorAll("main");
@@ -749,7 +950,7 @@
         const sortedClasses = Object.keys(classCounts).sort((a, b) => classCounts[b] - classCounts[a]);
         
         counterItems.innerHTML = '';
-        
+            const summaryParts = [];
         sortedClasses.forEach(className => {
             const count = classCounts[className];
             const counterItem = document.createElement('div');
@@ -759,8 +960,9 @@
                 <span class="counter-count">${count}</span>
             `;
             counterItems.appendChild(counterItem);
+                 summaryParts.push(`${className}: ${count}`);
         });
-        
+          detectionSummaryText = summaryParts.join(", ");
         counterContainer.style.display = 'block';
     }
 
@@ -941,58 +1143,81 @@
     function filterImage(selectedIds) {
         drawImageWithFilter(selectedIds);
     }
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+        document.getElementById("loadingOverlay").style.display = "flex";
+    // ✅ Resize before upload
+    const resizedFile = await resizeImage(file, 800, 800); // target max width/height
 
-    document.getElementById("fileInput").addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+    const formData = new FormData();
+    formData.append("image", resizedFile, file.name);
+
+    try {
+        const response = await fetch("/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
         
-        const formData = new FormData();
-        formData.append("image", file);
-
-        try {
-            const response = await fetch("/predict", {
-                method: "POST",
-                body: formData
-            });
-
-            const result = await response.json();
-            
-            if (result.error) {
-                throw new Error(result.error);
-            }
-            
-            currentDetections = result.detections;
-            currentImageData = result.annotated_image;
-            currentDetectionData = result.detection_data || [];
-            originalImageData = result.original_image;
-            
-            await initializeCanvas();
-            
-            // Load original image
-            originalImage = new Image();
-            originalImage.onload = function() {
-                canvas.width = originalImage.width;
-                canvas.height = originalImage.height;
-                
-                // Prepare detection overlays
-                detectionOverlays = prepareDetectionOverlays(currentDetectionData);
-                
-                // Draw image with all detections
-                drawImageWithFilter();
-            };
-            originalImage.src = "data:image/jpeg;base64," + originalImageData;
-            
-            // Update the detection cards
-            updateDetectionCards(currentDetections);
-            
-            // Update detection counter
-            updateDetectionCounter(currentDetections);
-            
-        } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred while processing the image: " + error.message);
+        if (result.error) {
+            throw new Error(result.error);
         }
+
+        currentDetections = result.detections;
+        currentImageData = result.annotated_image;
+        currentDetectionData = result.detection_data || [];
+        originalImageData = result.original_image;
+
+        await initializeCanvas();
+
+        originalImage = new Image();
+        originalImage.onload = function() {
+            canvas.width = originalImage.width;
+            canvas.height = originalImage.height;
+            detectionOverlays = prepareDetectionOverlays(currentDetectionData);
+            drawImageWithFilter();
+        };
+        originalImage.src = "data:image/jpeg;base64," + originalImageData;
+
+        updateDetectionCards(currentDetections);
+        updateDetectionCounter(currentDetections);
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred while processing the image: " + error.message);
+    } finally {
+        // In case of error, hide loader too
+        document.getElementById("loadingOverlay").style.display = "none";
+    }
+});
+
+// 🪄 Helper function to resize image using canvas
+async function resizeImage(file, maxWidth, maxHeight) {
+    const img = await createImageBitmap(file);
+    let { width, height } = img;
+
+    // Maintain aspect ratio
+    const ratio = Math.min(maxWidth / width, maxHeight / height);
+    if (ratio < 1) {
+        width = width * ratio;
+        height = height * ratio;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, width, height);
+
+    // Convert canvas to Blob (JPEG or PNG)
+    return new Promise((resolve) => {
+        canvas.toBlob((blob) => {
+            resolve(new File([blob], file.name, { type: file.type }));
+        }, file.type, 0.9); // 0.9 = quality (for JPEG)
     });
+}
 
     function updateDetectionCards(detections) {
         const container = document.getElementById("detectionsContainer");
@@ -1088,7 +1313,9 @@
                 case "impacted tooth": return "#81bfbb"; // teal
                 case "root canal treatment": return "#360457"; // violet
                 case "missing teeth": return "#584c4f"; // brown
-                 case "periapical lesion": return "#938092"; // pinkidark
+                case "periapical lesion": return "#938092"; // pinkidark
+                case "bone loss": return "#4128ca"; // magenta
+                case "implant": return "#a1dfe2"; // lblue
                 case "crown": return "#185840"; // green
                 default: return "#ecf0f1"; // gray for unknown
             }
