@@ -16,49 +16,79 @@
     rel="stylesheet" 
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+  <!-- Google Fonts: Poppins and Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
-    /* Sidebar */
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+
     .sidebar {
       height: 100vh;
-      width: 200px; /* wider to fit icons + labels */
+      width: 200px;
       position: fixed;
       top: 0;
       left: -200px;
       background-color: #f8f9fa;
-      padding-top: 60px;
       transition: left 0.3s ease;
       z-index: 1001;
       box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .sidebar.open {
       left: 0;
     }
 
+    .sidebar-header {
+      text-align: left;
+      padding: 20px 10px;
+      color: black;
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: 1px;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+    }
+
+    .sidebar-footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 12px;
+      color: #666;
+      border-top: 1px solid #ddd;
+      background-color: #f1f1f1;
+      font-family: 'Roboto', sans-serif;
+    }
+
     .sidebar .sidebar-burger {
       position: absolute;
-      top: 12px;
+      top: 5px;
       right: 16px;
-      font-size: 24px;
+      font-size: 22px;
       background: none;
       border: none;
-      color: #007bff;
+      color: black;
       cursor: pointer;
     }
 
     .sidebar a {
       padding: 14px 20px;
       text-decoration: none;
-      font-size: 16px;
+      font-size: 15px;
       color: #333;
       display: flex;
       align-items: center;
       gap: 12px;
       transition: background-color 0.2s;
+      font-family: 'Roboto', sans-serif;
     }
 
     .sidebar a i {
-      font-size: 20px;
+      font-size: 18px;
       color: #007bff;
     }
 
@@ -135,7 +165,6 @@
       width: 100%;
     }
 
-    /* Prevent page scrolling when sidebar is open */
     body.lock-scroll {
       overflow: hidden;
       position: fixed;
@@ -145,7 +174,6 @@
 </head>
 <body>
 
-<!-- Mini Vertical Icon Navigation -->
 <div class="mini-nav" id="miniNav">
   <button class="burger" onclick="toggleSidebar()">☰</button>
   <a href="{{ url_for('main.home') }}" title="Home" data-bs-toggle="tooltip" data-bs-placement="right"><i class="fas fa-home"></i></a>
@@ -153,26 +181,30 @@
   <a href="{{ url_for('main.result') }}" title="Upload X-Ray" data-bs-toggle="tooltip" data-bs-placement="right"><i class="fas fa-upload"></i></a>
 </div>
 
-<!-- Sidebar -->
 <div id="mySidebar" class="sidebar">
-  <button class="sidebar-burger" onclick="toggleSidebar()">
-  <i class="fas fa-times"></i>
-</button>
-  <a href="{{ url_for('main.home') }}" class="{% if active_page == 'home' %}active{% endif %}" title="Home">
-    <i class="fas fa-home"></i> Home
-  </a>
-  <a href="{{ url_for('main.howitworks') }}" class="{% if active_page == 'howitworks' %}active{% endif %}" title="How it Works">
-    <i class="fas fa-info-circle"></i> How it Works
-  </a>
-  <a href="{{ url_for('main.result') }}" class="{% if active_page == 'upload' %}active{% endif %}" title="Upload X-Ray">
-    <i class="fas fa-upload"></i> Upload X-Ray
-  </a>
+  <div>
+    <div class="sidebar-header">
+      TootHack
+    </div>
+
+    <a href="{{ url_for('main.home') }}" class="{% if active_page == 'home' %}active{% endif %}" title="Home">
+      <i class="fas fa-home"></i> Home
+    </a>
+    <a href="{{ url_for('main.howitworks') }}" class="{% if active_page == 'howitworks' %}active{% endif %}" title="How it Works">
+      <i class="fas fa-info-circle"></i> How it Works
+    </a>
+    <a href="{{ url_for('main.result') }}" class="{% if active_page == 'upload' %}active{% endif %}" title="Upload X-Ray">
+      <i class="fas fa-upload"></i> Upload X-Ray
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    © 2025 TootHack
+  </div>
 </div>
 
-<!-- Overlay -->
 <div id="sidebarOverlay" class="overlay" onclick="toggleSidebar()"></div>
 
-<!-- Bootstrap JS Bundle -->
 <script 
   src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" 
   integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" 
@@ -200,7 +232,6 @@
     }
   }
 
-  // Enable Bootstrap tooltips
   document.addEventListener("DOMContentLoaded", () => {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
