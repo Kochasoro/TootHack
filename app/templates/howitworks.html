@@ -437,13 +437,14 @@
       <div class="hero">NEED HELP?</div>
 
       <!-- TAB MENU -->
-      <div class="tab-menu">
-        <button class="active" onclick="openTab('how')">How it works</button>
-        <button onclick="openTab('diagnostic')">Diagnostic Guide</button>
-        <button onclick="openTab('clinics')">Clinics</button>
-        <button onclick="openTab('faqs')">FAQs</button>
-        <button onclick="openTab('contacts')">Contacts</button>
-      </div>
+     <div class="tab-menu">
+  <button data-tab="how" onclick="openTab('how')">How it works</button>
+  <button data-tab="diagnostic" onclick="openTab('diagnostic')">Diagnostic Guide</button>
+  <button data-tab="clinics" onclick="openTab('clinics')">Clinics</button>
+  <button data-tab="faqs" onclick="openTab('faqs')">FAQs</button>
+  <button data-tab="contacts" onclick="openTab('contacts')">Contacts</button>
+</div>
+
 
       <!-- CONTENT BOX -->
       <div class="content-box">
@@ -595,18 +596,42 @@
 
   <script>
   function openTab(tabId) {
-   
-    document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
-    
-    document.querySelectorAll(".tab-menu button").forEach(btn => btn.classList.remove("active"));
-    
-    document.getElementById(tabId).style.display = "block";
-   
+  document.querySelectorAll(".tab-content").forEach(el => {
+    el.style.display = "none";
+  });
+
+  document.querySelectorAll(".tab-menu button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  const tabContent = document.getElementById(tabId);
+  if (tabContent) tabContent.style.display = "block";
+
+  const activeBtn = document.querySelector(`.tab-menu button[data-tab="${tabId}"]`);
+  if (activeBtn) activeBtn.classList.add("active");
+
+ 
+document.addEventListener("DOMContentLoaded", () => {
+  const visibleTab = document.querySelector(".tab-content:not([style*='display: none'])");
+  if (visibleTab) {
+    const tabId = visibleTab.id;
     const activeBtn = document.querySelector(`.tab-menu button[data-tab="${tabId}"]`);
-    if (activeBtn) {
-      activeBtn.classList.add("active");
-    }
+    if (activeBtn) activeBtn.classList.add("active");
   }
+});
+  document.addEventListener("DOMContentLoaded", () => {
+  const visibleTab = document.querySelector(".tab-content:not([style*='display: none'])");
+  
+  if (visibleTab) {
+    const tabId = visibleTab.id;
+    const correctBtn = document.querySelector(`.tab-menu button[data-tab="${tabId}"]`);
+    if (correctBtn) correctBtn.classList.add("active");
+  }
+});
+
+
+
+}
 
   //  (one open at a time)
   document.addEventListener("DOMContentLoaded", () => {
